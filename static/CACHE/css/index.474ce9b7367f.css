@@ -1,0 +1,12 @@
+/* line 1, static/styles/index.scss */
+body {
+  background-color: red; }
+
+/* line 5, static/styles/index.scss */
+h1 {
+  color: red; }
+
+/* line 9, static/styles/index.scss */
+.post-image {
+  border: 11px solid red !important;
+  width: 100%; }

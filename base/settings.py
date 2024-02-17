@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'compressor',
+
     'animal',
     'user',
     'pages'
@@ -123,9 +128,22 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/images/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static'
+# ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/') 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',  
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',    
+    'compressor.finders.CompressorFinder',
+) 
+COMPRESS_PRECOMPILERS = (    
+    (
+        'text/x-scss', 
+        'django_libsass.SassCompiler'
+    ),
+)
 
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
