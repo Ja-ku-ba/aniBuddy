@@ -1,0 +1,1 @@
+1. responsywna szerokość dla postu

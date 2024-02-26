@@ -2,7 +2,10 @@
 
 {% block content %}
 <main>
-    <h1>aha</h1>
-    {% include 'components/posts.html' %}
+    <div class="mx-auto w-50">
+        <a href="{% url 'add' 'post' %}" class="btn btn-secondary mt-2 w-100 mx-auto">Dodaj posts</a>
+        {% include 'components/posts.html' %}
+    <div>
+
 </main>
 {% endblock %}
