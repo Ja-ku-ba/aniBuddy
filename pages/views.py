@@ -9,7 +9,7 @@ from .models import Post
 def home(request):
     return render(request, 'pages/home.html')
 
-def addPost(request, page):
+def add(request, page):
     form = PostForm()
     if request.method == "POST":
         form = PostForm(request.POST)
