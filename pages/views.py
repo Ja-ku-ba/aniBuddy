@@ -12,7 +12,7 @@ def home(request):
 def add(request, page):
     form = PostForm()
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             Post.objects.create(
                 description = request.POST.get('description'),
