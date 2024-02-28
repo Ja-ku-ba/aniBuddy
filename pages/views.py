@@ -1,24 +1,32 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
 from .forms import PostForm
 from .models import Post
 
+
 # Create your views here.
 def home(request):
-    return render(request, 'pages/home.html')
+    return render(request, "pages/home.html")
+
 
 def add(request, page):
     form = PostForm()
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            Post.objects.create(
-                description = request.POST.get('description'),
-                content = request.POST.get('content'),
-                added = datetime.now()
+            new_post = Post.objects.create(
+                description=request.POST.get("description"),
+                content=request.POST.get("content"),
+                added=datetime.now(),
             )
-            return redirect('home')
-    context = {'form': form}
-    return render(request, 'pages/add.html', context)
+            images = request.FILES.getlist("images")
+            for image in images:
+                new_post.image = image
+                new_post.save()
+            return redirect("home")
+        else:
+            print(form.errors)
+    context = {"form": form}
+    return render(request, "pages/add.html", context)
