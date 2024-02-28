@@ -26,7 +26,9 @@ def add(request, page):
                 new_post.image = image
                 new_post.save()
             return redirect("home")
-        else:
-            print(form.errors)
+        # else:
+        # var = dir(form.errors.items())
+        # print(var)
+        # print(form.errors.get_json_data()["__all__"][0]["message"])
     context = {"form": form}
     return render(request, "pages/add.html", context)
