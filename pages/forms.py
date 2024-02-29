@@ -21,7 +21,6 @@ class PostForm(ModelForm):
         content = cleaned_data.get("content")
         image = cleaned_data.get("image")
 
-        # Sprawdź czy wszystkie pola są puste
         if not any([description, content, image]):
             raise forms.ValidationError("Przynajmniej jedno pole musi zawierać treść.")
 
