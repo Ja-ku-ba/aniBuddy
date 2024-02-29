@@ -9,7 +9,7 @@
 {% if form.errors %}
     <div class="alert alert-danger">
         {% for error in form.errors.items %}
-            {{ error|slice:"1:" }}
+            {{ error }}
         {% endfor %}
     </div>
 {% endif %}
