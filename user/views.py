@@ -36,3 +36,8 @@ def login_user(request):
 
     context = {"form": form, "action": "login"}
     return render(request, "user/loginRegister.html", context)
+
+
+def logout_user(request):
+    logout(request)
+    return redirect("/")

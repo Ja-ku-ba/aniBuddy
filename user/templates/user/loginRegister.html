@@ -36,7 +36,7 @@
       name="password1"
     />
   </div>
-  {% if acction == 'register' %}
+  {% if action == 'register' %}
   <div class="form-group my-2">
     <label for="password2">Potwierdź hasło:</label>
     <input
@@ -48,8 +48,20 @@
     />
   </div>
   <button type="submit" class="btn btn-primary my-3">Zarejestruj</button>
+  <span class="mx-auto">Masz konto?</span>
+  <a
+    class="mx-auto link-underline link-underline-opacity-0"
+    href="{% url 'login' %}"
+    >Zaloguj się</a
+  >
   {% else %}
   <button type="submit" class="btn btn-primary my-3">Zaloguj</button>
+  <span class="mx-auto">Nie masz jeszcze konta?</span>
+  <a
+    class="mx-auto link-underline link-underline-opacity-0"
+    href="{% url 'register' %}"
+    >Zarejestruj się</a
+  >
   {% endif %}
 </form>
 {% endblock %}
