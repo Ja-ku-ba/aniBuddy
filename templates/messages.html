@@ -8,29 +8,16 @@
 <ul class="messages">
   {% endfor %}
 </ul>
-{% endif %} {% comment %} {% if form.errors %}
-<div class="alert alert-danger">
-  {% for error in form.errors.items %} {{ error }} {% endfor %}
-</div>
-{% endif %} {% endcomment %} {% comment %}
+{% endif %} {% if form.errors %} {% for field in form %} {% if field.errors %}
+
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <span>błędy</span>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+  <strong>{{ field.label }}</strong>
+  {% for error in field.errors %}
+  <span>{{ error }}</span>
+  {% endfor %}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </button>
 </div>
-{% endcomment %} 
-{% if form.errors %}
-{% for field in form %}
-  {% if field.errors %}
-    {{ field.label }}:
-    {% for error in field.errors %}
-      {{ error }}
-    {% endfor %}
-  {% endif %}
-{% endfor %}
-
-{% for error in form.non_field_errors %}
-        <strong>{{ error|escape }}</strong>
-{% endfor %}
-{% endif %}
+{% endif %} {% endfor %} {% for error in form.non_field_errors %}
+<strong>{{ error|escape }}</strong>
+{% endfor %} {% endif %}
