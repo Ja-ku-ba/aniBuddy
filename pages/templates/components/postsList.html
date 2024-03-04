@@ -1,0 +1,25 @@
+{% load humanize %}
+
+{% for post in posts %}
+<a href="{% url 'post_page' post.id %}">
+	<div class="card post-image my-2">
+		{% load static %}
+		<img 
+			src="{{ MEDIA_URL }}/media/posts/2023-06-13_1232570000.png" 
+			id="local-image"
+			class="img-fluid" 
+			alt="{{post.owner.username}}{{post.added}}" 
+		>
+
+
+		<div class="card-body">
+			<a href="#" class="link-dark link-underline link-underline-opacity-0"
+			>@{{ post.owner.username }}, {{ post.added|naturaltime }}: 
+			{{ post.description|truncatechars:50 }}</a>
+			<p class="card-text border-top border-dark">
+			{{ post.content }}
+			</p>
+		</div>
+	</div>
+</a>
+{% endfor %}
