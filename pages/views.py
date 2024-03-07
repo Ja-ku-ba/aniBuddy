@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from base.settings import MEDIA_ROOT, MEDIA_URL
@@ -40,3 +41,16 @@ def add(request, page):
 
 def post_page(request, id):
     return render(request, "pages/postView.html")
+
+
+def delete_post(request, id):
+    try:
+        post = Post.objects.get(id=id, owner=request.user)
+    except:
+        messages.error(
+            request,
+            "Chcesz usunąć post, którego nie jesteś w posiadaniu.",
+        )
+        return redirect("home")
+    post.delete()
+    return redirect("home")
