@@ -1,7 +1,6 @@
 {% extends 'index.html' %}
 
 {% block content %}
-
 <form class="card p-2" method='POST' action=''>
     {% csrf_token %}
     {% for field in form %}

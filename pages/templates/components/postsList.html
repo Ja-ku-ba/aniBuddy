@@ -1,38 +1,25 @@
+{% load humanize %}
+
 {% for post in posts %}
+<a href="{% url 'post_page' post.id %}">
 	<div class="card post-image my-2">
-	<img
-		src="static/images/dogo.jpeg"
-		class="card-img-top post__imge"
-		alt="postPicture"
-	/>
+		{% load static %}
+		<img 
+			src="{{ MEDIA_URL }}/media/posts/{{post.owner.id}}/{{post.pk}}.png" 
+			id="local-image"
+			class="img-fluid" 
+			alt="{{post.owner.username}}{{post.added}}" 
+		/>
 
-	<div class="card-body">
-		<a href="#" class="link-dark link-underline link-underline-opacity-0"
-		>@Kuba_ 12:37: Lorem Ipsum is simply dummy text of the printing and
-		typesetting industry.</a
-		>
-		<p class="card-text border-top border-dark">
-		Some quick example text to build on the card title and make up the bulk of
-		the card's content.
-		</p>
-	</div>
-	</div>
-	{% endfor %}
-<div class="card post-image my-2">
-  <img
-    src="static/images/dogo.jpeg"
-    class="card-img-top post__imge"
-    alt="postPicture"
-  />
 
-  <div class="card-body">
-    <a href="#" class="link-dark link-underline link-underline-opacity-0"
-      >@Kuba_ 12:37: Lorem Ipsum is simply dummy text of the printing and
-      typesetting industry.</a
-    >
-    <p class="card-text border-top border-dark">
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </p>
-  </div>
-</div>
+		<div class="card-body">
+			<a href="#" class="link-dark link-underline link-underline-opacity-0"
+			>@{{ post.owner.username }}, {{ post.added|naturaltime }}: 
+			{{ post.description|truncatechars:50 }}</a>
+			<p class="card-text border-top border-dark">
+			{{ post.content }}
+			</p>
+		</div>
+	</div>
+</a>
+{% endfor %}

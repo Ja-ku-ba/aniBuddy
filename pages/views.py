@@ -2,6 +2,8 @@ from datetime import datetime
 
 from django.shortcuts import redirect, render
 
+from base.settings import MEDIA_ROOT, MEDIA_URL
+
 from .forms import PostForm
 from .models import Post
 
@@ -10,11 +12,14 @@ from .models import Post
 def home(request):
     posts = Post.objects.all()
     context = {"posts": posts}
+    print(MEDIA_ROOT)
+    print(MEDIA_URL + "posts/2023-06-13_1232570000.png")
     return render(request, "pages/home.html", context)
 
 
 def add(request, page):
     form = PostForm()
+
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
