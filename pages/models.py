@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 
 # Create your models here.
 def get_image_filepath(self, filename):
-    return f"/media/posts/{self.owner.id}/{self.pk}.png"
+    return f"posts/{self.owner.id}/{self.pk}.png"
 
 
 class Post(models.Model):
