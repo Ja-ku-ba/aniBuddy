@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "compressor",
     "animal",
     "user",
     "pages",
@@ -123,15 +122,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
-
-STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_ROOT = BASE_DIR / "media/"
 
-STATIC_ROOT = "/media/"
+# STATIC_ROOT = "/media/"
 
+STATIC_URL = "/static/"
+
+STATICFILES_DIRS = (BASE_DIR / "static",)
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
 #     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
