@@ -30,7 +30,7 @@ def add(request, page):
                 content=request.POST.get("content"),
                 added=datetime.now(),
             )
-            images = request.FILES.getlist("images")
+            images = request.FILES.getlist("image")
             for image in images:
                 new_post.image = image
                 new_post.save()
