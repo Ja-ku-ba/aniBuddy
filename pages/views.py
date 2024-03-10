@@ -11,14 +11,18 @@ from .models import Post, PostImage
 
 # Create your views here.
 def home(request):
+    # room = Room.objects.get(id=pk)
+    # room_messages = room.message_set.all()
     posts = Post.objects.all()
+    images = posts.postImages_set.all()
+    print(images)
     context = {"posts": posts}
     print(MEDIA_ROOT)
     print(MEDIA_URL + "posts/2023-06-13_1232570000.png")
     return render(request, "pages/home.html", context)
 
 
-def add(request, page):
+def post_add(request):
     form = PostForm()
     formImages = PostImageForm()
     if request.method == "POST":
@@ -36,8 +40,11 @@ def add(request, page):
             # saves images related to post
             images = request.FILES.getlist("images")
             for request_image in images:
-                new_image = PostImage.objects.create(post=new_post, image=request_image)
-                print(new_image.id, "[[[[[[[[]]]]]]]]")
+                new_image = PostImage.objects.create(post=new_post)
+                new_image.save()
+                new_image.image = request_image
+                new_image.save()
+
             return redirect("home")
     context = {"form": form, "formImages": formImages}
     return render(request, "pages/addPost.html", context)
@@ -47,7 +54,7 @@ def post_page(request, id):
     return render(request, "pages/postView.html")
 
 
-def delete_post(request, id):
+def post_delete(request, id):
     try:
         post = Post.objects.get(id=id, owner=request.user)
     except:
