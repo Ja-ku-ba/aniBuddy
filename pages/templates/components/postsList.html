@@ -1,5 +1,9 @@
 {% load humanize %}
 
+{% for image in images %}
+
+{% endfor %}
+
 {% for post in posts %}
 <a href="{% url 'post_page' post.id %}">
 	<div class="card post-image my-2">

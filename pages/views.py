@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.db.models import BooleanField, Case, CharField, Count, Min, Value, When
+from django.db.models.functions import Coalesce
 from django.shortcuts import redirect, render
 
 from base.settings import MEDIA_ROOT, MEDIA_URL
@@ -8,14 +10,21 @@ from base.settings import MEDIA_ROOT, MEDIA_URL
 from .forms import PostForm, PostImageForm
 from .models import Post, PostImage
 
+# from .orm import get_post_image
+
 
 # Create your views here.
 def home(request):
-    # room = Room.objects.get(id=pk)
-    # room_messages = room.message_set.all()
-    posts = Post.objects.all()
-    images = posts.postImages_set.all()
-    print(images)
+
+    # is used to specify if post have image, if do then, get how many,
+    # then get first image path
+    posts = Post.objects.annotate(
+        images_quantity=Count("postimage__post_id", distinct=True),
+        image_first=Min("postimage__image"),
+    ).values(
+        "added", "content", "deleted", "description", "images_quantity", "first_image"
+    )
+
     context = {"posts": posts}
     print(MEDIA_ROOT)
     print(MEDIA_URL + "posts/2023-06-13_1232570000.png")
