@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.db.models import BooleanField, Case, CharField, Count, Min, Value, When
-from django.db.models.functions import Coalesce
+from django.db.models import Count, Min, Value
+from django.db.models.functions import Concat
 from django.shortcuts import redirect, render
 
 from base.settings import MEDIA_ROOT, MEDIA_URL
@@ -18,13 +18,28 @@ def home(request):
 
     # is used to specify if post have image, if do then, get how many,
     # then get first image path
-    posts = Post.objects.annotate(
-        images_quantity=Count("postimage__post_id", distinct=True),
-        image_first=Min("postimage__image"),
-    ).values(
-        "added", "content", "deleted", "description", "images_quantity", "first_image"
+    posts = (
+        Post.objects.annotate(
+            images_quantity=Count("postimage__post_id", distinct=True),
+            image_first=Min("postimage__image"),
+            image_first_id=Min("postimage__id"),
+            username=Concat("owner__username", Value("")),
+        )
+        .order_by("-added")
+        .values(
+            "id",
+            "added",
+            "owner",
+            "username",
+            "content",
+            "description",
+            "images_quantity",
+            "image_first",
+            "image_first_id",
+        )
     )
-
+    for x in posts:
+        print(x)
     context = {"posts": posts}
     print(MEDIA_ROOT)
     print(MEDIA_URL + "posts/2023-06-13_1232570000.png")

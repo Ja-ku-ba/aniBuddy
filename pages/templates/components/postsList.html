@@ -4,26 +4,26 @@
 
 {% endfor %}
 
+
 {% for post in posts %}
 <a href="{% url 'post_page' post.id %}">
 	<div class="card post-image my-2">
-		{% if request.user == post.owner %}
-			<a href="{% url 'post_delete' post.id %}">Usuń</a>
+		{% if post.image_first  %}
+			<img 
+				src="{{ MEDIA_URL }}/media/posts/{{post.owner}}/{{post.id}}/{{post.image_first_id}}.png" 
+				id="local-image"
+				class="img-fluid" 
+				alt="@{{post.username}}{{post.added}}" 
+			/>
 		{% endif %}
-		<img 
-			src="{{ MEDIA_URL }}/media/posts/{{post.owner.id}}/{{post.pk}}.png" 
-			id="local-image"
-			class="img-fluid" 
-			alt="{{post.owner.username}}{{post.added}}" 
-		/>
 
 
 		<div class="card-body">
 			<a href="#" class="link-dark link-underline link-underline-opacity-0"
-			>@{{ post.owner.username }}, {{ post.added|naturaltime }}: 
+			>@{{ post.username }}, {{ post.added|naturaltime }}: 
 			{{ post.description|truncatechars:50 }}</a>
 			<p class="card-text border-top border-dark">
-			{{ post.content }}
+			{{ post.content|truncatechars:100 }}
 			</p>
 		</div>
 	</div>

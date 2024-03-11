@@ -18,9 +18,6 @@ class Post(models.Model):
     added = models.DateTimeField(auto_now_add=False)
     deleted = models.BooleanField(default=False)
 
-    class Meta:
-        ordering = ["-added"]
-
 
 class PostImage(models.Model):
     # post to which image was added
