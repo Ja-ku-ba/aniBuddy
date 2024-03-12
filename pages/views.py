@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Count, Min, Value
 from django.db.models.functions import Concat
 from django.shortcuts import redirect, render
+from filetype import guess
 
 from base.settings import MEDIA_ROOT, MEDIA_URL
 
@@ -38,21 +39,37 @@ def home(request):
             "image_first_id",
         )
     )
-    for x in posts:
-        print(x)
+
     context = {"posts": posts}
-    print(MEDIA_ROOT)
-    print(MEDIA_URL + "posts/2023-06-13_1232570000.png")
     return render(request, "pages/home.html", context)
 
 
 def post_add(request):
     form = PostForm()
     formImages = PostImageForm()
+
     if request.method == "POST":
         formPost = PostForm(request.POST)
         formImages = PostImageForm(request.POST, request.FILES)
+
         if formPost.is_valid() and formImages.is_valid():
+
+            # chcek if files are images/gifs, not other types
+            # before any crud on db (eg. Post)
+            images = request.FILES.getlist("images")
+            for file in images:
+                kind = guess(file)
+                # if file is diffrent format than image/gif, then throw error
+                # if format is None, throw error
+                try:
+                    if not kind.mime.startswith("image"):
+                        raise KeyError
+                except:
+                    messages.add_message(
+                        request, messages.ERROR, "Przesłany plik nie jest zdjęciem."
+                    )
+                    return redirect("poast_add")
+
             # creates a new post object
             new_post = Post.objects.create(
                 owner=request.user,
@@ -62,7 +79,6 @@ def post_add(request):
             )
 
             # saves images related to post
-            images = request.FILES.getlist("images")
             for request_image in images:
                 new_image = PostImage.objects.create(post=new_post)
                 new_image.save()
