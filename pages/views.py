@@ -49,14 +49,22 @@ def post_add(request):
     formImages = PostImageForm()
 
     if request.method == "POST":
-        formPost = PostForm(request.POST)
+        form = PostForm(request.POST)
         formImages = PostImageForm(request.POST, request.FILES)
 
-        if formPost.is_valid() and formImages.is_valid():
+        # chcek if user want to add an empty post
+        if form.is_valid() and formImages.is_valid():
+            if not any([form.clean(), formImages.clean()]):
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "Co najmniej jedno pole musi zawierać wartość",
+                )
+                return redirect("poast_add")
 
             # chcek if files are images/gifs, not other types
             # before any crud on db (eg. Post)
-            images = request.FILES.getlist("images")
+            images = request.FILES.getlist("image")
             for file in images:
                 kind = guess(file)
                 # if file is diffrent format than image/gif, then throw error
