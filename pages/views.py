@@ -1,40 +1,17 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.db.models import Count, Min, Value
-from django.db.models.functions import Concat
 from django.shortcuts import redirect, render
 from filetype import guess
 
 from .forms import PostForm, PostImageForm
 from .models import Post, PostImage
+from .orm import get_post
 
 
 # Create your views here.
 def home(request):
-
-    # is used to specify if post have attached image, if do then, get how many,
-    # and then get first image path
-    posts = (
-        Post.objects.annotate(
-            images_quantity=Count("postimage__post_id", distinct=True),
-            image_first=Min("postimage__image"),
-            image_first_id=Min("postimage__id"),
-            username=Concat("owner__username", Value("")),
-        )
-        .order_by("-added")
-        .values(
-            "id",
-            "added",
-            "owner",
-            "username",
-            "content",
-            "description",
-            "images_quantity",
-            "image_first",
-            "image_first_id",
-        )
-    )
+    posts = get_post(Post)
 
     context = {"posts": posts}
     return render(request, "pages/home.html", context)
@@ -95,7 +72,16 @@ def post_add(request):
 
 
 def post_page(request, id):
-    return render(request, "pages/postView.html")
+    post = Post.objects.get(id=id)
+    post = get_post(Post, id=id)
+    # try:
+    # except:
+    #     messages.add_message(
+    #         request, messages.ERROR, "Chcesz zobaczyć post, który nie istnieje"
+    #     )
+    print(post, "[[[[[[]]]]]]")
+    context = {"post": post}
+    return render(request, "pages/postView.html", context)
 
 
 def post_delete(request, id):

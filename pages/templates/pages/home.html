@@ -1,8 +1,16 @@
 {% extends "index.html" %} 
 {% block content %}
 <div>
-  <a href="{% url 'poast_add' %}" class="btn btn-secondary mt-2 w-100 mx-auto"
-    >Dodaj posts</a>
-    {% include 'components/postsList.html' %}
-  {% endblock %}
+	<a href="{% url 'poast_add' %}" class="btn btn-secondary mt-2 w-100 mx-auto"
+		>Dodaj posts</a>
+		{% for post in posts %}
+			<a href="{% url 'post_page' post.id %}">
+
+				{% include 'components/postShow.html' %}
+		{% endfor %}
+
+	</a>
+	
 </div>
+
+{% endblock %}
