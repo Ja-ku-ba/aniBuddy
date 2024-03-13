@@ -43,13 +43,3 @@ class PostImageForm(ModelForm):
             return None
 
         return cleaned_data
-
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     description = cleaned_data.get("description")
-    #     content = cleaned_data.get("content")
-
-    #     if not any([description, content]):
-    #         raise forms.ValidationError("Przynajmniej jedno pole musi zawierać treść.")
-
-    #     return cleaned_data

@@ -6,12 +6,8 @@ from django.db.models.functions import Concat
 from django.shortcuts import redirect, render
 from filetype import guess
 
-from base.settings import MEDIA_ROOT, MEDIA_URL
-
 from .forms import PostForm, PostImageForm
 from .models import Post, PostImage
-
-# from .orm import get_post_image
 
 
 # Create your views here.
@@ -67,6 +63,7 @@ def post_add(request):
             images = request.FILES.getlist("image")
             for file in images:
                 kind = guess(file)
+                print(kind.mime, "[[[[[[[[[[]]]]]]]]]]")
                 # if file is diffrent format than image/gif, then throw error
                 # if format is None, throw error
                 try:
