@@ -72,16 +72,15 @@ def post_add(request):
 
 
 def post_page(request, id):
-    post = Post.objects.get(id=id)
     post = get_post(Post, id=id)
-    # try:
-    # except:
-    #     messages.add_message(
-    #         request, messages.ERROR, "Chcesz zobaczyć post, który nie istnieje"
-    #     )
-    print(post, "[[[[[[]]]]]]")
-    context = {"post": post}
-    return render(request, "pages/postView.html", context)
+    if post:
+        context = {"post": post[0]}
+        return render(request, "pages/postView.html", context)
+    else:
+        messages.add_message(
+            request, messages.ERROR, "Chcesz wyświetlić zawartość, która nie istnieje."
+        )
+        return redirect("home")
 
 
 def post_delete(request, id):

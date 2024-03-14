@@ -1,21 +1,26 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Min, Value
 from django.db.models.functions import Concat
+
+from .models import Post
 
 
 # is used to specify if post have attached image, if do then, get how many,
 # and then get first image path.
 # Chceck if post is not deleted
 def get_post(querryset, **conditions):
-    if "id" in conditions:
-        id_query = conditions.get("id")
-        query = querryset.objects.filter(id=id_query)
-    else:
-        query = querryset.objects
+    query = querryset.objects
 
     if "deleted" in conditions:
         deleted_query = conditions.get("deleted")
     else:
         deleted_query = False
+
+    if "id" in conditions:
+        try:
+            query = querryset.objects.filter(id=conditions.get("id"))
+        except:
+            return None
 
     result = (
         query.annotate(
@@ -38,4 +43,5 @@ def get_post(querryset, **conditions):
             "image_first_id",
         )
     )
+    print(result)
     return result
