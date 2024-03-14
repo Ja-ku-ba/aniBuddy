@@ -1,0 +1,14 @@
+<form class="card p-2" method="POST" action="" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="mb-1">
+    <textarea
+      class="form-control"
+      id="{{ form.coment.id_for_label }}"
+      name="{{ form.coment.name }}"
+      placeholder="Dodaj komentarz"
+    ></textarea>
+  </div>
+  <div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+  </div>
+</form>

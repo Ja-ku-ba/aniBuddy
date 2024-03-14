@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from filetype import guess
 
-from .forms import PostForm, PostImageForm
-from .models import Post, PostImage
+from .forms import ComentForm, PostForm, PostImageForm
+from .models import Coment, Post, PostImage
 from .orm import get_post
 
 
@@ -73,8 +73,22 @@ def post_add(request):
 
 def post_page(request, id):
     post = get_post(Post, id=id)
+    form = ComentForm()
+    # add coment
+    if request.method == "POST":
+        form = ComentForm(request.POST)
+        if form.is_valid():
+            Coment.objects.create(
+                post_id=id,
+                coment=form["coment"],
+                added=datetime.now(),
+                owner=request.user,
+            )
+        return redirect("post_page", id)
+
     if post:
-        context = {"post": post[0]}
+        coments = Coment.objects.filter(post_id=id)
+        context = {"post": post[0], "form": form, "coments": coments}
         return render(request, "pages/postView.html", context)
     else:
         messages.add_message(

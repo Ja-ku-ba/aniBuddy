@@ -66,3 +66,13 @@ class PostImage(models.Model):
             if not guess(self.image).mime.startswith("image/gif"):
                 self.image = convert_to_webp(self.image)
         super().save(*args, **kwargs)
+
+
+class Coment(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.DO_NOTHING)
+    coment = models.CharField(max_length=1023)
+    added = models.DateTimeField(auto_now_add=False)
+    owner = models.ForeignKey(
+        "user.MyUserModel", verbose_name=_("Właściciel"), on_delete=models.DO_NOTHING
+    )
+    deleted = models.BooleanField(default=False)

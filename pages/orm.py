@@ -31,17 +31,18 @@ def get_post(querryset, **conditions):
         )
         .order_by("-added")
         .filter(deleted=deleted_query)
-        .values(
-            "id",
-            "added",
-            "owner",
-            "username",
-            "content",
-            "description",
-            "images_quantity",
-            "image_first",
-            "image_first_id",
-        )
     )
     print(result)
     return result
+
+    # .values(
+    #     "id",
+    #     "added",
+    #     "owner",
+    #     "username",
+    #     "content",
+    #     "description",
+    #     "images_quantity",
+    #     "image_first",
+    #     "image_first_id",
+    # )

@@ -1,7 +1,6 @@
-from django import forms
 from django.forms import ModelForm
 
-from .models import Post, PostImage
+from .models import Coment, Post, PostImage
 
 
 class PostForm(ModelForm):
@@ -43,3 +42,9 @@ class PostImageForm(ModelForm):
             return None
 
         return cleaned_data
+
+
+class ComentForm(ModelForm):
+    class Meta:
+        model = Coment
+        fields = ["coment"]

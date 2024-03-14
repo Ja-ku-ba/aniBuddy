@@ -1,22 +1,22 @@
 {% load humanize %}
 
 <div class="card post-image my-2">
-	{% if post.image_first  %}
-		<img 
-			src="{{ MEDIA_URL }}/media/{{post.image_first}}" 
-			id="local-image"
-			class="img-fluid" 
-			alt="@{{post.username}}{{post.added}}" 
-		/>
-	{% endif %}
+  {% if post.image_first %}
+  <img
+    src="{{ MEDIA_URL }}/media/{{post.image_first}}"
+    id="local-image"
+    class="img-fluid"
+    alt="@{{post.username}}{{post.added}}"
+  />
+  {% endif %}
 
-
-	<div class="card-body">
-		<a href="#" class="link-dark link-underline link-underline-opacity-0"
-		>@{{ post.username }}, {{ post.added|naturaltime }}: 
-		{{ post.description|truncatechars:50 }}</a>
-		<p class="card-text border-top border-dark">
-		{{ post.content|truncatechars:100 }}
-		</p>
-	</div>
+  <div class="card-body">
+    <a href="#" class="link-dark link-underline link-underline-opacity-0"
+      >@{{ post.username }}, {{ post.added|naturaltime }}: {{
+      post.description|truncatechars:50 }}</a
+    >
+    <p class="card-text border-top border-dark">
+      {{ post.content|truncatechars:100 }}
+    </p>
+  </div>
 </div>
