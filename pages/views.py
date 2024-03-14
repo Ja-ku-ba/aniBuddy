@@ -78,12 +78,20 @@ def post_page(request, id):
     if request.method == "POST":
         form = ComentForm(request.POST)
         if form.is_valid():
+            print(dir(form), form["coment"])
             Coment.objects.create(
                 post_id=id,
-                coment=form["coment"],
+                coment=request.POST.get("coment"),
                 added=datetime.now(),
                 owner=request.user,
             )
+        else:
+            if len(request.POST.get("coment")) > 1023:
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    "Możesz napisać komentarz składający się tylko 1000 zanków",
+                )
         return redirect("post_page", id)
 
     if post:

@@ -76,3 +76,6 @@ class Coment(models.Model):
         "user.MyUserModel", verbose_name=_("Właściciel"), on_delete=models.DO_NOTHING
     )
     deleted = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-added"]

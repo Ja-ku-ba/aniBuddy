@@ -2,5 +2,8 @@
 
 {% block content %} 
     {% include "components/postShow.html" %} 
-    {% include "components/addComent.html" %}
+    <div class="card p-2" >
+        {% include "components/addComent.html" %}
+        {% include "components/comentSection.html" %}
+    </div>
 {% endblock %}
