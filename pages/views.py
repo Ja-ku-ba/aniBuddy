@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from filetype import guess
 
+from utils.orm import get_post
+
 from .forms import ComentForm, PostForm, PostImageForm
 from .models import Coment, Post, PostImage
-from .orm import get_post
 
 
 # Create your views here.
@@ -71,8 +72,8 @@ def post_add(request):
     return render(request, "pages/addPost.html", context)
 
 
-def post_page(request, id):
-    post = get_post(Post, id=id)
+def post_page(request, pk):
+    post = get_post(Post, id=pk)
     form = ComentForm()
     # add coment
     if request.method == "POST":
@@ -80,7 +81,7 @@ def post_page(request, id):
         if form.is_valid():
             print(dir(form), form["coment"])
             Coment.objects.create(
-                post_id=id,
+                post_id=pk,
                 coment=request.POST.get("coment"),
                 added=datetime.now(),
                 owner=request.user,
@@ -92,10 +93,10 @@ def post_page(request, id):
                     messages.INFO,
                     "Możesz napisać komentarz składający się tylko 1000 zanków",
                 )
-        return redirect("post_page", id)
+        return redirect("post_page", pk)
 
     if post:
-        coments = Coment.objects.filter(post_id=id)
+        coments = Coment.objects.filter(post_id=pk)
         context = {"post": post[0], "form": form, "coments": coments}
         return render(request, "pages/postView.html", context)
     else:
@@ -105,9 +106,9 @@ def post_page(request, id):
         return redirect("home")
 
 
-def post_delete(request, id):
+def post_delete(request, pk):
     try:
-        post = Post.objects.get(id=id, owner=request.user)
+        post = Post.objects.get(id=pk, owner=request.user)
     except:
         messages.error(
             request,

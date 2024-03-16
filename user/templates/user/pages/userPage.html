@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section>
+    {% include "user/components/aboutMeBoard.html" %}
+    {% for post in posts %}
+        <a href="{% url 'post_page' post.id %}">
+			{% include 'components/postShow.html' %}
+        </a>
+    {% endfor %}
+</section>
+<aside>
+    Galeria zwierzaków
+</aside>
+{% endblock %}

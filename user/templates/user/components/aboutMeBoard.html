@@ -1,0 +1,12 @@
+<div class="card post-image my-2">
+    <div class="card-body row">
+		<a class="link-dark link-underline link-underline-opacity-0 col-sm">
+			<h1>@{{ user.username }},</h1>
+		</a>
+		<div class="col-sm">
+			<span>Z nami od: {{ user.account_created|date:"m.d.Y" }}</span>
+			<span>Dodał: {{ user.post_count }} postów</span>  
+		<div>
+    </div>
+</div>
+  

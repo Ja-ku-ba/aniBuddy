@@ -1,8 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Min, Value
+from django.db.models import Count, Min, Q, Value
 from django.db.models.functions import Concat
-
-from .models import Post
 
 
 # is used to specify if post have attached image, if do then, get how many,
@@ -22,6 +19,12 @@ def get_post(querryset, **conditions):
         except:
             return None
 
+    if "owner_id" in conditions:
+        try:
+            query = querryset.objects.filter(owner_id=conditions.get("owner_id"))
+        except:
+            return None
+
     result = (
         query.annotate(
             images_quantity=Count("postimage__post_id", distinct=True),
@@ -32,17 +35,19 @@ def get_post(querryset, **conditions):
         .order_by("-added")
         .filter(deleted=deleted_query)
     )
-    print(result)
+
     return result
 
-    # .values(
-    #     "id",
-    #     "added",
-    #     "owner",
-    #     "username",
-    #     "content",
-    #     "description",
-    #     "images_quantity",
-    #     "image_first",
-    #     "image_first_id",
-    # )
+
+from pages.models import Post
+
+
+def get_user_info(queryset, pk):
+    queryset = (
+        queryset.objects.filter(id=pk, deleted=False)
+        .annotate(
+            post_count=Count("post", filter=Q(post__owner_id=pk, post__deleted=False))
+        )
+        .first()
+    )
+    return queryset

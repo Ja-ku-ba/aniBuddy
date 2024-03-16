@@ -5,18 +5,25 @@
   <img
     src="{{ MEDIA_URL }}/media/{{post.image_first}}"
     id="local-image"
-    class="img-fluid"
+    class="fit-image"
     alt="@{{post.username}}{{post.added}}"
   />
   {% endif %}
-
   <div class="card-body">
-    <a href="#" class="link-dark link-underline link-underline-opacity-0"
-      >@{{ post.username }}, {{ post.added|naturaltime }}: {{
-      post.description|truncatechars:50 }}</a
-    >
-    <p class="card-text border-top border-dark">
-      {{ post.content|truncatechars:100 }}
-    </p>
+    <a 
+      href="{% url "user" post.owner_id %}" 
+      class="link-dark link-underline link-underline-opacity-0">
+      @{{ post.username }},
+    </a>
+    <a 
+      href="{% url 'post_page' post.id %}" 
+      class="link-dark link-underline link-underline-opacity-0">
+        <span>
+          {{ post.added|naturaltime }}:{{ post.description|truncatechars:50 }}
+        </span>
+        <p class="card-text border-top border-dark">
+          {{ post.content|truncatechars:100 }}
+        </p>
+    </a>
   </div>
 </div>

@@ -20,7 +20,7 @@
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link">@{{user.username}}</a>
+          <a href="{% url "user" request.user.id %}" class="nav-link">@{{user.username}}</a>
         </li>
         <li class"nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Wyloguj</a>
