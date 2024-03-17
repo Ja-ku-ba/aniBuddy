@@ -39,9 +39,6 @@ def get_post(querryset, **conditions):
     return result
 
 
-from pages.models import Post
-
-
 def get_user_info(queryset, pk):
     queryset = (
         queryset.objects.filter(id=pk, deleted=False)
