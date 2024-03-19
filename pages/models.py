@@ -29,6 +29,8 @@ class Post(models.Model):
     content = models.TextField(_("Zawartość text"), blank=True, null=True)
     added = models.DateTimeField(auto_now_add=False)
     deleted = models.BooleanField(default=False)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
 
 
 def convert_to_webp(image):
@@ -79,3 +81,10 @@ class Coment(models.Model):
 
     class Meta:
         ordering = ["-added"]
+
+
+class Reaction(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    user = models.ForeignKey("user.MyUserModel", on_delete=models.CASCADE)
+    # reaction = 1, means that user liked post. reaction = -1 means dislike
+    reaction = models.IntegerField(default=0)

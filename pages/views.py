@@ -117,3 +117,8 @@ def post_delete(request, pk):
         return redirect("home")
     post.delete()
     return redirect("home")
+
+
+def add_interaction(request, pk, action):
+
+    return render(request, "pages/postView.hmtl")
