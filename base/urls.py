@@ -25,7 +25,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("pages.urls")),
     path("", include("user.urls")),
-    path("", include("animal.urls")),
 ]
 
 # Serving the media files in development mode
