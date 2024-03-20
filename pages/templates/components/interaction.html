@@ -1,17 +1,26 @@
 {% load static %}
-<div class="card">
-    <form method="POST" class="card-body">
-        <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group me-2" role="group" aria-label="First group">
-              <button type="button" class="btn btn-outline-secondary">
-                <img src="{% static "icons/like.svg" %}">
-              </button>
-              <span class="btn btn-outline-secondary">28</span>
-        
-              <button type="button" class="btn btn-outline-secondary">
-                <img src="{% static "icons/dislike.svg" %}">
-              </button>
-            </div>
-          </div>
-    </form>
+<div class="btn-group" role="group" aria-label="Basic outlined example">
+{{reaction_status}}
+	<form 
+		method="POST" 
+		class="btn btn-outline-secondary"
+		action="{% url 'interaction' pk=post.id action='1' %}"
+
+	>
+		{% if reaction_status == 0 %}
+			<img src="{% static "icons/like.svg" %}">
+		{% elif reaction_status == 1 %}
+			<img src="{% static "icons/unlike.svg" %}">
+		{% endif %}
+	</form>
+
+	<span class="btn btn-outline-secondary">28</span>
+
+	<form method="POST" class="btn btn-outline-secondary">
+		{% if reaction_status == 0 %}
+			<img src="{% static "icons/dislike.svg" %}">
+		{% elif reaction_status == -1 %}
+			<img src="{% static "icons/undislike.svg" %}">
+		{% endif %}
+	</form>
 </div>

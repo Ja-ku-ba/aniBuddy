@@ -7,7 +7,7 @@ from filetype import guess
 from utils.orm import get_post
 
 from .forms import ComentForm, PostForm, PostImageForm
-from .models import Coment, Post, PostImage
+from .models import Coment, Post, PostImage, Reaction
 
 
 # Create your views here.
@@ -75,7 +75,10 @@ def post_add(request):
 def post_page(request, pk):
     post = get_post(Post, id=pk)
     form = ComentForm()
-    # add coment
+    try:
+        reaction = Reaction.objects.get(post_id=pk, user=request.user).reaction
+    except:
+        reaction = 0
     if request.method == "POST":
         form = ComentForm(request.POST)
         if form.is_valid():
@@ -97,7 +100,12 @@ def post_page(request, pk):
 
     if post:
         coments = Coment.objects.filter(post_id=pk)
-        context = {"post": post[0], "form": form, "coments": coments}
+        context = {
+            "post": post[0],
+            "form": form,
+            "coments": coments,
+            "reaction_status": reaction,
+        }
         return render(request, "pages/postView.html", context)
     else:
         messages.add_message(
@@ -120,5 +128,21 @@ def post_delete(request, pk):
 
 
 def add_interaction(request, pk, action):
-
+    print("[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]")
+    if request.method == "POST":
+        try:
+            reaction = Reaction.objects.get(post_id=pk, user=request.user)
+            reaction.delete()
+            if action in [-1, 1]:
+                Reaction.objects.create(post_id=pk, user=request.user, reaction=action)
+        except:
+            if action in [-1, 1]:
+                Reaction.objects.create(post_id=pk, user=request.user, reaction=action)
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Interakcja, którą chcesz przeprowadzić jest nie możliwa",
+            )
+    print(reaction.reaction, "[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]")
+    context = {"reaction_status": reaction.reaction}
     return render(request, "pages/postView.hmtl")

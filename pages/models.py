@@ -58,9 +58,6 @@ class PostImage(models.Model):
     image = models.ImageField(
         upload_to=get_image_filepath, max_length=255, null=True, blank=True
     )
-    # animal = modelf.models.ForeignKey(
-    #     "app.Model", verbose_name=_(""), on_delete=models.CASCADE
-    # )
     deleted = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):

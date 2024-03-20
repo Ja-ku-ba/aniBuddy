@@ -8,6 +8,6 @@ urlpatterns = [
     path("post/<int:pk>", views.post_page, name="post_page"),
     path("post/delete/<int:pk>", views.post_delete, name="post_delete"),
     path(
-        "post/reaction/<int:pk>/<str:action>", views.add_interaction, name="interaction"
+        "post/reaction/<str:pk>/<str:action>", views.add_interaction, name="interaction"
     ),
 ]
