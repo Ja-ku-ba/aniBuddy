@@ -1,11 +1,9 @@
 {% load static %}
-<div class="btn-group" role="group" aria-label="Basic outlined example">
-{{reaction_status}}
+<div class="btn-group w-50 mx-auto mb-2" role="group" aria-label="Basic outlined example">
 	<form 
 		method="POST" 
 		class="btn btn-outline-secondary"
 		action="{% url 'interaction' pk=post.id action='1' %}"
-
 	>
 		{% if reaction_status == 0 %}
 			<img src="{% static "icons/like.svg" %}">

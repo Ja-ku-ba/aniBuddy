@@ -128,7 +128,6 @@ def post_delete(request, pk):
 
 
 def add_interaction(request, pk, action):
-    print("[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]")
     if request.method == "POST":
         try:
             reaction = Reaction.objects.get(post_id=pk, user=request.user)

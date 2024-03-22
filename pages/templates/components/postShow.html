@@ -1,32 +1,33 @@
-{% load humanize %}
+	{% load humanize %}
 
-<div class="card post-image my-2">
-  {% if post.image_first %}
-  <img
-    src="{{ MEDIA_URL }}/media/{{post.image_first}}"
-    id="local-image"
-    class="fit-image"
-    alt="@{{post.username}}{{post.added}}"
-  />
-  {% endif %}
-  <div class="card-body">
-    <a 
-      href="{% url "user" post.owner_id %}" 
-      class="link-dark link-underline link-underline-opacity-0">
-      @{{ post.username }},
-    </a>
-    <a 
-      href="{% url 'post_page' post.id %}" 
-      class="link-dark link-underline link-underline-opacity-0">
-        <span>
-          {{ post.added|naturaltime }}:{{ post.description|truncatechars:50 }}
-        </span>
-        <p class="card-text border-top border-dark">
-          {{ post.content|truncatechars:100 }}
-        </p>
-    </a>
-  </div>
-  {{request}}
-  {% include "components/interaction.html" %} 
-
+	<div class="card post-image my-2">
+	{% if post.image_first %}
+	<img
+		src="{{ MEDIA_URL }}/media/{{post.image_first}}"
+		id="local-image"
+		class="fit-image"
+		alt="@{{post.username}}{{post.added}}"
+	/>
+	{% endif %}
+	<div class="card-body">
+		<a
+		href="{% url "user" post.owner_id %}"
+		class="link-dark link-underline link-underline-opacity-0">
+		@{{ post.username }},
+		</a>
+		<a
+			href="{% url 'post_page' post.id %}"
+			class="link-dark link-underline link-underline-opacity-0"
+		>
+			<span>
+				{{ post.added|naturaltime }}:{{ post.description|truncatechars:50 }}
+			</span>
+			<p class="card-text border-top border-dark">
+				{{ post.content|truncatechars:100 }}
+			</p>
+		</a>
+	</div>
+	{% if request.path != "/" %}
+		{% include "components/interaction.html" %}
+	{% endif %}
 </div>

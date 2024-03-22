@@ -1,15 +1,14 @@
 {% load humanize %}
 
-<div class="mt-3">
 {% for coment in coments %}
-
-<div class="card post-image my-2">
+<div class="card post-image mt-4">
     <div class="card-body">
-      <a href="#" class="link-dark link-underline link-underline-opacity-0"
-        >@{{ coment.owner.username }}, {{ coment.added|naturaltime }}</a>
-      <p class="card-text border-top border-dark">
-        {{ coment.coment }}
-      </p>
-    </div>
+      <a href="#" class="link-dark link-underline link-underline-opacity-0">
+        @{{ coment.owner.username }}, {{ coment.added|naturaltime }}
+      </a>
+    <p class="card-text border-top border-dark">
+      {{ coment.coment }}
+    </p>
   </div>
+</div>
 {% endfor %}
