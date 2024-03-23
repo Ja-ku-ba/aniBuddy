@@ -130,8 +130,10 @@ def post_delete(request, pk):
 def add_interaction(request, pk, action):
     if request.method == "POST":
         try:
+            # if user want to change from dislike to like
             reaction = Reaction.objects.get(post_id=pk, user=request.user)
             reaction.delete()
+            # enssure that user does not mess up
             if action in [-1, 1]:
                 Reaction.objects.create(post_id=pk, user=request.user, reaction=action)
         except:
@@ -142,6 +144,4 @@ def add_interaction(request, pk, action):
                 messages.ERROR,
                 "Interakcja, którą chcesz przeprowadzić jest nie możliwa",
             )
-    print(reaction.reaction, "[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]")
-    context = {"reaction_status": reaction.reaction}
-    return render(request, "pages/postView.hmtl")
+    return redirect("post_page", pk)

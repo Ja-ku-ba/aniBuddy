@@ -1,14 +1,10 @@
-{% extends "index.html" %} 
+{% extends "index.html" %}
 {% block content %}
-<div>
-	<a href="{% url 'poast_add' %}" class="btn btn-secondary mt-2 w-100 mx-auto">
-		Dodaj posts
-	</a>
-	{% for post in posts %}
-		<a href="{% url 'post_page' post.id %}">
-			{% include 'components/postShow.html' %}
-		</a>
-	{% endfor %}
-</div>
-
+    <div>
+        <a href="{% url 'poast_add' %}"
+           class="btn btn-secondary mt-2 w-100 mx-auto">Dodaj posts</a>
+        {% for post in posts %}
+            <a href="{% url 'post_page' post.id %}">{% include 'components/postShow.html' %}</a>
+        {% endfor %}
+    </div>
 {% endblock %}

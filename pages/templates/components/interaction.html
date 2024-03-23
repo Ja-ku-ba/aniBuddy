@@ -1,24 +1,28 @@
 {% load static %}
-<div class="btn-group w-50 mx-auto mb-2" role="group" aria-label="Basic outlined example">
-	<form 
-		method="POST" 
-		class="btn btn-outline-secondary"
-		action="{% url 'interaction' pk=post.id action='1' %}"
-	>
-		{% if reaction_status == 0 %}
-			<img src="{% static "icons/like.svg" %}">
-		{% elif reaction_status == 1 %}
-			<img src="{% static "icons/unlike.svg" %}">
-		{% endif %}
+<div class="btn-group w-50 mx-auto mb-2" role="group">
+	<form method="POST" class="btn btn-outline-secondary" action="{% url 'interaction' post.id '1' %}">
+		{%  csrf_token%}
+		<button type="submit">
+			{% if reaction_status == 0 %}
+				<img src="{% static "icons/like.svg" %}">
+			{% elif reaction_status == 1 %}
+				<img src="{% static "icons/unlike.svg" %}">
+			{% endif %}
+		</button>
 	</form>
 
 	<span class="btn btn-outline-secondary">28</span>
 
-	<form method="POST" class="btn btn-outline-secondary">
-		{% if reaction_status == 0 %}
-			<img src="{% static "icons/dislike.svg" %}">
-		{% elif reaction_status == -1 %}
-			<img src="{% static "icons/undislike.svg" %}">
-		{% endif %}
+	<form method="POST" class="btn btn-outline-secondary" action="{% url 'interaction' post.id '0' %}">
+		{%  csrf_token%}
+		<button type="submit">
+			{% if reaction_status == 0 %}
+				<img src="{% static "icons/dislike.svg" %}">
+			{% elif reaction_status == 1 %}
+				<img src="{% static "icons/undislike.svg" %}">
+			{% endif %}
+		</button>
+	</form>
+
 	</form>
 </div>

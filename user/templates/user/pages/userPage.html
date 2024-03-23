@@ -3,7 +3,7 @@
 
 {% block content %}
     {% include "user/components/aboutMeBoard.html" %}
-    
+
     {% for post in posts %}
         <a href="{% url 'post_page' post.id %}">
             {% include "components/postShow.html" %}
