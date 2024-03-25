@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from filetype import guess
 
 from utils.orm import get_post
-
 from .forms import ComentForm, PostForm, PostImageForm
 from .models import Coment, Post, PostImage, Reaction
 
@@ -73,16 +72,11 @@ def post_add(request):
 
 
 def post_page(request, pk):
-    post = get_post(Post, id=pk)
     form = ComentForm()
-    try:
-        reaction = Reaction.objects.get(post_id=pk, user=request.user).reaction
-    except:
-        reaction = 0
+
     if request.method == "POST":
         form = ComentForm(request.POST)
         if form.is_valid():
-            print(dir(form), form["coment"])
             Coment.objects.create(
                 post_id=pk,
                 coment=request.POST.get("coment"),
@@ -98,20 +92,31 @@ def post_page(request, pk):
                 )
         return redirect("post_page", pk)
 
-    if post:
+    try:
+        reaction = Reaction.objects.get(post_id=pk, user=request.user).reaction
+    except:
+        # if user does not interacted with post yet
+        reaction = 0
+
+    try:
+        post = get_post(Post, id=pk)
         coments = Coment.objects.filter(post_id=pk)
+        images = PostImage.objects.filter(post_id=pk)
+
         context = {
             "post": post[0],
             "form": form,
             "coments": coments,
             "reaction_status": reaction,
+            "images": images,
         }
-        return render(request, "pages/postView.html", context)
-    else:
+    except:
         messages.add_message(
             request, messages.ERROR, "Chcesz wyświetlić zawartość, która nie istnieje."
         )
         return redirect("home")
+
+    return render(request, "pages/postView.html", context)
 
 
 def post_delete(request, pk):
@@ -127,18 +132,33 @@ def post_delete(request, pk):
     return redirect("home")
 
 
-def add_interaction(request, pk, action):
+def add_interaction(request, pk):
     if request.method == "POST":
+        try:
+            action = int(request.POST.get("reaction"))
+        except TypeError:
+            action = None
+
         try:
             # if user want to change from dislike to like
             reaction = Reaction.objects.get(post_id=pk, user=request.user)
-            reaction.delete()
-            # enssure that user does not mess up
+
             if action in [-1, 1]:
-                Reaction.objects.create(post_id=pk, user=request.user, reaction=action)
+                # ensure that user wants to unlike or undislike
+                if reaction.reaction != action:
+                    Reaction.objects.create(
+                        post_id=pk, user=request.user, reaction=action
+                    ).save()
+                reaction.delete()
+            else:
+                raise ValueError
         except:
+            # first user interaction with post
             if action in [-1, 1]:
-                Reaction.objects.create(post_id=pk, user=request.user, reaction=action)
+                Reaction.objects.create(
+                    post_id=pk, user=request.user, reaction=action
+                ).save()
+                return redirect("post_page", pk)
             messages.add_message(
                 request,
                 messages.ERROR,

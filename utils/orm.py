@@ -1,4 +1,4 @@
-from django.db.models import Count, Min, Q, Value
+from django.db.models import Count, Min, Q, Value, Sum
 from django.db.models.functions import Concat
 
 
@@ -27,15 +27,24 @@ def get_post(querryset, **conditions):
 
     result = (
         query.annotate(
-            images_quantity=Count("postimage__post_id", distinct=True),
             image_first=Min("postimage__image"),
-            image_first_id=Min("postimage__id"),
             username=Concat("owner__username", Value("")),
+            reactions=Sum("reaction__reaction"),
+        )
+        .values(
+            "added",
+            "content",
+            "description",
+            "id",
+            "image_first",
+            "owner_id",
+            "postimage",
+            "reactions",
+            "username",
         )
         .order_by("-added")
         .filter(deleted=deleted_query)
     )
-
     return result
 
 

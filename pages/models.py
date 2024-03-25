@@ -1,11 +1,10 @@
 from io import BytesIO
 
-from django.core.files.base import ContentFile
+from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.utils.translation import gettext as _
 from filetype import guess
-from PIL import Image
 
 
 # Create your models here.
@@ -29,8 +28,6 @@ class Post(models.Model):
     content = models.TextField(_("Zawartość text"), blank=True, null=True)
     added = models.DateTimeField(auto_now_add=False)
     deleted = models.BooleanField(default=False)
-    likes = models.IntegerField(default=0)
-    dislikes = models.IntegerField(default=0)
 
 
 def convert_to_webp(image):

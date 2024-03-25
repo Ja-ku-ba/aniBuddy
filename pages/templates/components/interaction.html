@@ -1,28 +1,23 @@
 {% load static %}
 <div class="btn-group w-50 mx-auto mb-2" role="group">
-	<form method="POST" class="btn btn-outline-secondary" action="{% url 'interaction' post.id '1' %}">
-		{%  csrf_token%}
-		<button type="submit">
-			{% if reaction_status == 0 %}
-				<img src="{% static "icons/like.svg" %}">
-			{% elif reaction_status == 1 %}
-				<img src="{% static "icons/unlike.svg" %}">
-			{% endif %}
-		</button>
-	</form>
+    <form method="POST" action="{% url 'interaction' post.id %}">
+        {% csrf_token %}
+        <button type="submit" name="reaction" class="btn btn-outline-secondary" value="1">
+            {% if reaction_status == 0 or reaction_status == -1 %}
+                <img src="{% static "icons/like.svg" %}" alt="like">
+            {% elif reaction_status == 1 %}
+                <img src="{% static "icons/unlike.svg" %}" alt="unlike">
+            {% endif %}
+        </button>
 
-	<span class="btn btn-outline-secondary">28</span>
+        <span class="btn btn-outline-secondary">{{ post.reactions }}</span>
 
-	<form method="POST" class="btn btn-outline-secondary" action="{% url 'interaction' post.id '0' %}">
-		{%  csrf_token%}
-		<button type="submit">
-			{% if reaction_status == 0 %}
-				<img src="{% static "icons/dislike.svg" %}">
-			{% elif reaction_status == 1 %}
-				<img src="{% static "icons/undislike.svg" %}">
-			{% endif %}
-		</button>
-	</form>
-
-	</form>
+        <button type="submit" name="reaction" class="btn btn-outline-secondary" value="-1">
+            {% if reaction_status == 0 or reaction_status == 1 %}
+                <img src="{% static "icons/dislike.svg" %}" alt="dislike">
+            {% elif reaction_status == -1 %}
+                <img src="{% static "icons/undislike.svg" %}" alt="undislike">
+            {% endif %}
+        </button>
+    </form>
 </div>
