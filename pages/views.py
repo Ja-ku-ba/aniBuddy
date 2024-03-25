@@ -165,3 +165,7 @@ def add_interaction(request, pk):
                 "Interakcja, którą chcesz przeprowadzić jest nie możliwa",
             )
     return redirect("post_page", pk)
+
+
+def messages_page(request):
+    return render(request, "pages/messagePage.html")

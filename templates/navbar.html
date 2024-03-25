@@ -1,32 +1,36 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container-fluid d-flex">
-    <a class="navbar-brand" href="{% url 'home' %}">Home</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        {% if not user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a href="{% url "user" request.user.id %}" class="nav-link">@{{user.username}}</a>
-        </li>
-        <li class"nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Wyloguj</a>
-        </li>
-        {% endif %}
-      </ul>
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary p-1" data-bs-theme="dark">
+    <div class="container-fluid d-flex">
+        <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'messages' %}" class="nav-link h-25"><img src="{% static "icons/messages.svg" %}" alt="wiadomości"/></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user' request.user.id %}" class="nav-link">@{{user.username}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Wyloguj</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>

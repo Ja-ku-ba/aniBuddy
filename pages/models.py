@@ -82,3 +82,13 @@ class Reaction(models.Model):
     user = models.ForeignKey("user.MyUserModel", on_delete=models.CASCADE)
     # reaction = 1, means that user liked post. reaction = -1 means dislike
     reaction = models.IntegerField(default=0)
+
+
+class UserMessage(models.Model):
+    from_user = models.ForeignKey(
+        "user.MyUserModel", on_delete=models.CASCADE, related_name="from_user"
+    )
+    to_user = models.ForeignKey(
+        "user.MyUserModel", on_delete=models.CASCADE, related_name="to_user"
+    )
+    message = models.TextField()
