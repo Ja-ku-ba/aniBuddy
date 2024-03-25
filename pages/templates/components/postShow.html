@@ -1,7 +1,6 @@
 {% load humanize %}
 
 <div class="card post-image my-2">
-    {{ post.reactions }}, {{ post.images_quantity }}
     {% if post.image_first %}
         <img
                 src="{{ MEDIA_URL }}/media/{{ post.image_first }}"
