@@ -1,1 +1,10 @@
 {% extends "index.html" %}
+
+{% block content %}
+    {% for header in headers %}
+        {{ header }}
+
+        </br>
+        </br>
+    {% endfor %}
+{% endblock %}

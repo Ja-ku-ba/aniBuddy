@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from filetype import guess
 
-from utils.orm import get_post
+from utils.orm import get_post, get_messages_headers
 from .forms import ComentForm, PostForm, PostImageForm
 from .models import Coment, Post, PostImage, Reaction
 
@@ -167,5 +167,11 @@ def add_interaction(request, pk):
     return redirect("post_page", pk)
 
 
-def messages_page(request):
+def messages_page(request, pk=None):
+    messages_headers = get_messages_headers(1)
+    context = {"headers": messages_headers}
+    return render(request, "pages/messagePage.html", context)
+
+
+def send_message(request, send_to):
     return render(request, "pages/messagePage.html")

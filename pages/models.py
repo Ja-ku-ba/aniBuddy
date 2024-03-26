@@ -92,3 +92,4 @@ class UserMessage(models.Model):
         "user.MyUserModel", on_delete=models.CASCADE, related_name="to_user"
     )
     message = models.TextField()
+    sent = models.DateTimeField(auto_now_add=True)

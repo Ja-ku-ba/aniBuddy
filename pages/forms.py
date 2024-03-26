@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Coment, Post, PostImage
+from .models import Coment, Post, PostImage, UserMessage
 
 
 class PostForm(ModelForm):
@@ -48,3 +48,9 @@ class ComentForm(ModelForm):
     class Meta:
         model = Coment
         fields = ["coment"]
+
+
+class MessageForm(ModelForm):
+    class Meta:
+        model = UserMessage
+        fields = ["message"]

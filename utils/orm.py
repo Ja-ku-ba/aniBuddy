@@ -1,5 +1,7 @@
-from django.db.models import Count, Min, Q, Value, Sum
+from django.db.models import Count, Min, Q, Value, Sum, Max
 from django.db.models.functions import Concat
+
+from pages.models import UserMessage
 
 
 # is used to specify if post have attached image, if do then, get how many,
@@ -56,4 +58,19 @@ def get_user_info(queryset, pk):
         )
         .first()
     )
+    return queryset
+
+
+def get_messages_headers(pk):
+    queryset = UserMessage.objects.filter(from_user_id=pk) | UserMessage.objects.filter(
+        to_user_id=pk
+    )
+    queryset = (
+        queryset.values("from_user_id", "to_user_id")
+        .order_by("-sent")
+        .annotate(sent=Max("sent"))
+    ).values("from_user_id", "to_user_id", "message", "sent")
+
+    print(dir(queryset))
+    print(queryset)
     return queryset
