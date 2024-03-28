@@ -1,10 +1,27 @@
 {% extends "index.html" %}
 
 {% block content %}
-    {% for header in headers %}
-        {{ header }}
+    {% for message in headers %}
+        <a href="/" class="card" style="width: 18rem;">
+            <div class="d.flex">
+                {% if message.from_user == request.user.username %}
+                    <span>@{{ message.from_username }},</span>
+                {% else %}
+                    <span>@{{ message.to_username }},</span>
+                {% endif %}
 
-        </br>
-        </br>
+                {% if message.time_since.days > 365 %}
+                    {# different year#}
+                    <span>{{ message.sent|date:"d F Y" }}</span>
+                {% elif message.time_since.days > 1 and message.time_since.days <= 365 %}
+                    {# same year but different day #}
+                    <span>{{ message.sent|date:"d F" }}</span>
+                {% else %}
+                    {# the same day#}
+                    <span>{{ message.sent|time:"H:i" }}</span>
+                {% endif %}
+            </div>
+            <span>{{ message.message }}</span>
+        </a>
     {% endfor %}
 {% endblock %}

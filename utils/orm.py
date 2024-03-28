@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.db.models import Count, Min, Q, Value, Sum, Max
+from django.db.models import F, ExpressionWrapper, DurationField
 from django.db.models.functions import Concat
 
 from pages.models import UserMessage
@@ -68,9 +71,24 @@ def get_messages_headers(pk):
     queryset = (
         queryset.values("from_user_id", "to_user_id")
         .order_by("-sent")
-        .annotate(sent=Max("sent"))
-    ).values("from_user_id", "to_user_id", "message", "sent")
+        .annotate(
+            sent=Max("sent"),
+            from_username=Concat("from_user_id__username", Value("")),
+            to_username=Concat("to_user_id__username", Value("")),
+            time_since=ExpressionWrapper(
+                datetime.now() - F("sent"), output_field=DurationField()
+            ),
+        )
+        .values(
+            "time_since",
+            "from_user_id",
+            "from_user",
+            "to_user_id",
+            "message",
+            "sent",
+            "from_username",
+            "to_username",
+        )
+    )
 
-    print(dir(queryset))
-    print(queryset)
     return queryset
