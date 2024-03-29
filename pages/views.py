@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from filetype import guess
 
-from utils.orm import get_post, get_messages_headers
+from user.models import MyUserModel
+from utils.orm import get_post, get_messages_headers, get_messages_from_chat
 from .forms import ComentForm, PostForm, PostImageForm
 from .models import Coment, Post, PostImage, Reaction
 
@@ -167,11 +168,27 @@ def add_interaction(request, pk):
     return redirect("post_page", pk)
 
 
-def messages_page(request, pk=None):
-    messages_headers = get_messages_headers(1)
+def messages_page(request):
+    messages_headers = get_messages_headers(request.user.id)
     context = {"headers": messages_headers}
     return render(request, "pages/messagePage.html", context)
 
 
-def send_message(request, send_to):
-    return render(request, "pages/messagePage.html")
+def send_message_page(request, pk1, pk2):
+    if pk1 == request.user.id:
+        chat_messages = get_messages_from_chat(pk1, pk2)
+        second_user_pk = pk2
+    else:
+        chat_messages = get_messages_from_chat(pk2, pk1)
+        second_user_pk = pk1
+
+    try:
+        roommate = MyUserModel.objects.get(id=second_user_pk)
+    except ValueError:
+        messages.add_message(
+            request, messages.ERROR, "Chcesz wyświetlić rozmowę, która nie istnieje"
+        )
+        return redirect("messages")
+
+    context = {"chat_messages": chat_messages, "roommate_username": roommate.username}
+    return render(request, "pages/chat.html", context)

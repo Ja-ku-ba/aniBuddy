@@ -1,0 +1,21 @@
+{% load static %}
+
+<nav>
+    <ul class="list-inline d-flex border-bottom">
+        <li>
+            <a class="btn btn-outline-secondary border-0">
+                <img src="{% static "icons/arrow_back.svg" %}" alt="Cofnij">
+            </a>
+        </li>
+        <li>
+            <a class="btn font-size-lg">
+                @{{ roommate_username }}
+            </a>
+        </li>
+        <li class="ms-auto">
+            <a class="btn btn-outline-secondary border-0">
+                <img src="{% static "icons/delete.svg" %}" alt="Usuń chat">
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -92,3 +92,15 @@ def get_messages_headers(pk):
     )
 
     return queryset
+
+
+def get_messages_from_chat(request_user, second_user):
+    queryset = UserMessage.objects.filter(
+        from_user=request_user, to_user=second_user
+    ) | UserMessage.objects.filter(from_user=second_user, to_user=request_user)
+    queryset.annotate(
+        time_since=ExpressionWrapper(
+            datetime.now() - F("sent"), output_field=DurationField()
+        ),
+    ).values("time_since")
+    return queryset

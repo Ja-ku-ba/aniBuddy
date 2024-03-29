@@ -1,5 +1,20 @@
 .fit-image {
-  object-fit: cover;
-  width: 100%;
-  max-height: 300px;
+    object-fit: cover;
+    width: 100%;
+    max-height: 300px;
+}
+
+.font-size-lg {
+    font-size: 24px !important;
+    padding: 0 !important;
+}
+
+/* chat page */
+.chat {
+    height: calc(100vh - 100px);
+}
+
+.chat-form {
+    position: fixed;
+    bottom: 30px;
 }
