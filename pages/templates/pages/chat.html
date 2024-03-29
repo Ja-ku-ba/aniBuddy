@@ -5,24 +5,26 @@
     <div class="card h-100">
         {% include "components/chatNavComponent.html" %}
 
-        <div class="chat">
-            {% for message in chat_messages %}
-                {% if message.from_user == request.user %}
-                    <div class="card w-75 ms-auto mb-3 me-2">
-                        <span class="border-bottom p-1">@{{ roommate_username }}, {{ message.sent|timesince }}</span>
-                        <span class="p-2">{{ message.message }}</span>
-                    </div>
-                {% else %}
-                    <div class="card w-75 mb-3 ms-2 p-1">
-                        <span class="border-bottom p-2">@{{ message.from_user }}, {{ message.sent|timesince }}</span>
-                        {{ message.message }}
-                    </div>
-                {% endif %}
-            {% endfor %}
+        <div class="chat bg-light">
+            <div class="messages">
+                {% for message in chat_messages %}
+                    {% if message.from_user == request.user %}
+                        <div class="card w-75 ms-auto mb-3 me-2">
+                            <span class="border-bottom p-1">@{{ roommate_username }}, {{ message.sent|timesince }}</span>
+                            <span class="p-2">{{ message.message }}</span>
+                        </div>
+                    {% else %}
+                        <div class="card w-75 mb-3 ms-2 p-1">
+                            <span class="border-bottom p-2">@{{ message.from_user }}, {{ message.sent|timesince }}</span>
+                            {{ message.message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
 
         <div class="form-inline chat-form">
-            <form class="form-group mb-2 mx-2 d-flex">
+            <form class="form-group d-flex">
                 {% csrf_token %}
                 <textarea class="form-control" placeholder="twoja wiadomość..."></textarea>
                 <button class="btn btn-light" type="submit">

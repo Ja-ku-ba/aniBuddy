@@ -10,11 +10,26 @@
 }
 
 /* chat page */
+.chat-nav {
+    position: sticky;
+    top: 64px;
+    overflow: hidden;
+    z-index: 10;
+}
+
 .chat {
-    height: calc(100vh - 100px);
+    position: relative;
+    height: calc(100vh - 200px);
+    overflow: auto;
+
+}
+
+.messages {
+    margin-bottom: 10px;
 }
 
 .chat-form {
     position: fixed;
     bottom: 30px;
+
 }
