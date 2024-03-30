@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block content %}
-    <div class="card h-100">
+    <div class="card">
         {% include "components/chatNavComponent.html" %}
 
-        <div class="chat bg-light">
-            <div class="messages">
+        <div class="chat bg-light   ">
+            <div class="messages p-1">
                 {% for message in chat_messages %}
                     {% if message.from_user == request.user %}
                         <div class="card w-75 ms-auto mb-3 me-2">
-                            <span class="border-bottom p-1">@{{ roommate_username }}, {{ message.sent|timesince }}</span>
+                            <span class="border-bottom p-1">@{{ request.user.username }}, {{ message.sent|timesince }}</span>
                             <span class="p-2">{{ message.message }}</span>
                         </div>
                     {% else %}
-                        <div class="card w-75 mb-3 ms-2 p-1">
+                        <div class="card w-75 mb-3 ms-2">
                             <span class="border-bottom p-2">@{{ message.from_user }}, {{ message.sent|timesince }}</span>
                             {{ message.message }}
                         </div>
@@ -23,10 +23,10 @@
             </div>
         </div>
 
-        <div class="form-inline chat-form">
-            <form class="form-group d-flex">
+        <div class="card">
+            <form class="form-group d-flex w-100 justify-content-between">
                 {% csrf_token %}
-                <textarea class="form-control" placeholder="twoja wiadomość..."></textarea>
+                <textarea class="chat-textarea border-0 w-100" placeholder="twoja wiadomość..."></textarea>
                 <button class="btn btn-light" type="submit">
                     <img src="{% static "icons/send.svg" %}" alt="Wyślij">
                 </button>

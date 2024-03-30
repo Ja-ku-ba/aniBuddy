@@ -1,3 +1,9 @@
+/* global */
+
+
+/* end global */
+
+/* posts, home */
 .fit-image {
     object-fit: cover;
     width: 100%;
@@ -8,6 +14,8 @@
     font-size: 24px !important;
     padding: 0 !important;
 }
+
+/* end posts, home */
 
 /* chat page */
 .chat-nav {
@@ -30,6 +38,36 @@
 
 .chat-form {
     position: fixed;
-    bottom: 30px;
-
+    border: 0;
 }
+
+.chat-textarea {
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    outline: none;
+    box-shadow: none;
+}
+
+/* end chat page */
+
+/* scrolbar */
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    margin: 3px 0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 4px;
+}
+
+/* end scrolbar */
