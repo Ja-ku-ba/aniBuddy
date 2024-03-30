@@ -25,7 +25,7 @@
     z-index: 10;
 }
 
-.chat {
+#chat {
     position: relative;
     height: calc(100vh - 200px);
     overflow: auto;

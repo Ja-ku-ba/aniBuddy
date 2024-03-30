@@ -6,8 +6,8 @@ from filetype import guess
 
 from user.models import MyUserModel
 from utils.orm import get_post, get_messages_headers, get_messages_from_chat
-from .forms import ComentForm, PostForm, PostImageForm
-from .models import Coment, Post, PostImage, Reaction
+from .forms import ComentForm, PostForm, PostImageForm, MessageForm
+from .models import Coment, Post, PostImage, Reaction, UserMessage
 
 
 # Create your views here.
@@ -175,7 +175,7 @@ def messages_page(request):
 
 
 def send_message_page(request, pk1, pk2):
-    if pk1 == request.user.id:
+    if pk1 == f"{request.user.id}":
         chat_messages = get_messages_from_chat(pk1, pk2)
         second_user_pk = pk2
     else:
@@ -190,5 +190,16 @@ def send_message_page(request, pk1, pk2):
         )
         return redirect("messages")
 
-    context = {"chat_messages": chat_messages, "roommate_username": roommate.username}
+    form = MessageForm()
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            UserMessage.objects.create(
+                from_user=request.user,
+                to_user=roommate,
+                message=form.cleaned_data["message"],
+            )
+        return redirect("send_message", request.user.id, second_user_pk)
+
+    context = {"chat_messages": chat_messages, "roommate": roommate, "form": form}
     return render(request, "pages/chat.html", context)

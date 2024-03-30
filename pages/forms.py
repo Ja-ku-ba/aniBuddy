@@ -51,6 +51,13 @@ class ComentForm(ModelForm):
 
 
 class MessageForm(ModelForm):
+
     class Meta:
         model = UserMessage
         fields = ["message"]
+
+    # allows to send an empty messages
+    # try to create random gif when empty message is send
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["message"].required = False
