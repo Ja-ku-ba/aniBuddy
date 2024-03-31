@@ -84,12 +84,25 @@ class Reaction(models.Model):
     reaction = models.IntegerField(default=0)
 
 
-class UserMessage(models.Model):
-    from_user = models.ForeignKey(
-        "user.MyUserModel", on_delete=models.CASCADE, related_name="from_user"
+class ChatRoom(models.Model):
+    first_owner = models.ForeignKey(
+        "user.MyUserModel", related_name="first_owner", on_delete=models.CASCADE
     )
-    to_user = models.ForeignKey(
-        "user.MyUserModel", on_delete=models.CASCADE, related_name="to_user"
+    second_owner = models.ForeignKey(
+        "user.MyUserModel", related_name="second_owner", on_delete=models.CASCADE
+    )
+    first_owner_deleted_time = models.DateTimeField(
+        auto_now=True, null=True, blank=True
+    )
+    second_owner_deleted_time = models.DateTimeField(
+        auto_now=True, null=True, blank=True
+    )
+
+
+class UserMessage(models.Model):
+    room = models.ForeignKey("ChatRoom", on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        "user.MyUserModel", on_delete=models.CASCADE, related_name="from_user"
     )
     message = models.TextField()
     sent = models.DateTimeField(auto_now_add=True)

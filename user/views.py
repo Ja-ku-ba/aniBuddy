@@ -4,7 +4,6 @@ from django.shortcuts import redirect, render
 
 from pages.models import Post
 from utils.orm import get_post, get_user_info
-
 from .forms import UserLoginForm, UserRegistrationForm
 from .models import MyUserModel
 
@@ -54,5 +53,5 @@ def profile_page(request, pk):
         return messages.add_message(
             request, messages.ERROR, "Chcesz wyświetlić zaratość, która nie istnieje"
         )
-    context = {"posts": posts, "user": user}
+    context = {"posts": posts, "user": user, "user_pk": pk}
     return render(request, "user/pages/userPage.html", context)

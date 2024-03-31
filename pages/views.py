@@ -4,10 +4,9 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from filetype import guess
 
-from user.models import MyUserModel
 from utils.orm import get_post, get_messages_headers, get_messages_from_chat
 from .forms import ComentForm, PostForm, PostImageForm, MessageForm
-from .models import Coment, Post, PostImage, Reaction, UserMessage
+from .models import Coment, Post, PostImage, Reaction, UserMessage, ChatRoom
 
 
 # Create your views here.
@@ -169,37 +168,54 @@ def add_interaction(request, pk):
 
 
 def messages_page(request):
-    messages_headers = get_messages_headers(request.user.id)
+    messages_headers = get_messages_headers(request.user)
+    print(messages_headers[0])
     context = {"headers": messages_headers}
     return render(request, "pages/messagePage.html", context)
 
 
 def send_message_page(request, pk1, pk2):
-    if pk1 == f"{request.user.id}":
-        chat_messages = get_messages_from_chat(pk1, pk2)
-        second_user_pk = pk2
+    # to don't write many times over conditions in template
+    if f"{request.user.id}" == pk1:
+        second_user_id = pk2
     else:
-        chat_messages = get_messages_from_chat(pk2, pk1)
-        second_user_pk = pk1
+        second_user_id = pk1
 
+    # check if there is chatroom
     try:
-        roommate = MyUserModel.objects.get(id=second_user_pk)
-    except ValueError:
+        room = ChatRoom.objects.filter(
+            first_owner=pk1, second_owner=pk2
+        ) | ChatRoom.objects.filter(first_owner=pk2, second_owner=pk1)
+
+        if not room:
+            room = ChatRoom.objects.create(first_owner_id=pk1, second_owner_id=pk2)
+            room.save()
+        else:
+            room = room[0]
+    except:
         messages.add_message(
-            request, messages.ERROR, "Chcesz wyświetlić rozmowę, która nie istnieje"
+            request,
+            messages.ERROR,
+            "Chcesz nawiązać rozmowę z osobą, która nie istnieje",
         )
         return redirect("messages")
+
+    chat_messages = get_messages_from_chat(pk1, pk2)
 
     form = MessageForm()
     if request.method == "POST":
         form = MessageForm(request.POST)
         if form.is_valid():
             UserMessage.objects.create(
-                from_user=request.user,
-                to_user=roommate,
+                owner=request.user,
+                room=room,
                 message=form.cleaned_data["message"],
             )
-        return redirect("send_message", request.user.id, second_user_pk)
-
-    context = {"chat_messages": chat_messages, "roommate": roommate, "form": form}
+        return redirect("send_message", pk1, pk2)
+    context = {
+        "room": room,
+        "chat_messages": chat_messages,
+        "form": form,
+        "second_user_id": second_user_id,
+    }
     return render(request, "pages/chat.html", context)

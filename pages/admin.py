@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, PostImage, Reaction, Coment, UserMessage
+from .models import Post, PostImage, Reaction, Coment, UserMessage, ChatRoom
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -13,3 +13,4 @@ admin.site.register(PostImage)
 admin.site.register(Reaction)
 admin.site.register(Coment)
 admin.site.register(UserMessage)
+admin.site.register(ChatRoom)

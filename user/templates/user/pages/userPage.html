@@ -3,7 +3,7 @@
 
 {% block content %}
     {% include "user/components/aboutMeBoard.html" %}
-    <a href="{% url 'messages' %}" class="card post-image my-2">
+    <a href="{% url 'send_message' request.user.id user_pk %}" class="card post-image my-2 p-2">
         Napisz wiadomość
     </a>
     {% for post in posts %}
