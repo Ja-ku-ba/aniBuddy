@@ -1,19 +1,18 @@
 {% extends "index.html" %}
 
 {% block content %}
-    <h1>ok</h1>
     {% for message in headers %}
-        <a href="{% url "send_message" request.user.id request.user.id %}" class="card" style="width: 18rem;">
+        <a href="{% url "send_message" message.first_owner_id message.second_owner_id %}" class="w-100 card mb-2 p-2" style="width: 18rem;">
             <div class="d.flex">
                 {% if message.first_owner_id != request.user.id %}
-                    <span>@{{ message.first_owner }},</span>
+                    <span>@{{ message.first_owner__username }},</span>
                 {% else %}
-                    <span>@{{ message.second_owner }},</span>
+                    <span>@{{ message.second_owner__username }},</span>
                 {% endif %}
 
                 {% include 'components/messageSentTimeComponent.html' %}
             </div>
-            <span>{{ message.last_message }}</span>
+            <span>{{ message.latest_message|truncatechars:255 }}</span>
         </a>
     {% endfor %}
 {% endblock %}

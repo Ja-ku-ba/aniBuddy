@@ -1,5 +1,19 @@
-from django.db.models import Count, Min, Q, Value, Sum, OuterRef, Subquery
-from django.db.models.functions import Concat, Coalesce
+from datetime import datetime
+
+from django.db.models import (
+    Count,
+    Min,
+    Q,
+    F,
+    Value,
+    Sum,
+    OuterRef,
+    Subquery,
+    DurationField,
+    ExpressionWrapper,
+    DateTimeField,
+)
+from django.db.models.functions import Concat
 
 from pages.models import ChatRoom, UserMessage
 
@@ -61,86 +75,41 @@ def get_user_info(queryset, pk):
     return queryset
 
 
-def get_messages_headers(user):
-    # get last message from every room
-    last_messages_subquery = UserMessage.objects.filter(
-        room_id=OuterRef("id")
-    ).order_by("-sent")
-    last_message = last_messages_subquery.values("message")[:1]
-
-    # Teraz zastosuj to podzapytanie do Twojego głównego zapytania
-    # queryset = ChatRoom.objects.filter(first_owner_id=user) | ChatRoom.objects.filter(
-    #     second_owner_id=user
-    # ).annotate(last_message=Subquery(last_message)).values("last_message").filter(
-    #     last_message__isnull=False
-    # )
-    values_tuple = (
-        "first_owner",
-        "id",
-        "last_message",
-        "second_owner",
+def get_messages_headers(pk):
+    latest_message_subquery = (
+        UserMessage.objects.filter(room_id=OuterRef("id"))
+        .order_by("-sent")
+        .values("message")[:1]
     )
+
     queryset = (
-        ChatRoom.objects.filter(first_owner_id=user)
+        ChatRoom.objects.filter(Q(first_owner_id=pk) | Q(second_owner_id=pk))
         .annotate(
-            last_message=Subquery(last_message),
-            second_owner_username=Coalesce(
-                Concat("second_owner__username", Value("")), ""
+            latest_message_sent=Subquery(
+                UserMessage.objects.filter(room_id=OuterRef("id"))
+                .order_by("-sent")
+                .values("sent")[:1],
+                output_field=DateTimeField(),
             ),
-            first_owner_username=Coalesce(
-                Concat("first_owner__username", Value("")), ""
+            time_since=ExpressionWrapper(
+                datetime.now() - F("latest_message_sent"),
+                output_field=DurationField(),
             ),
+            latest_message=Subquery(latest_message_subquery),
         )
-        .filter(last_message__isnull=False)
-        .values(
-            "first_owner_username",
-            "second_owner_username",
-            "first_owner",
-            "id",
-            "last_message",
-            "second_owner",
-        )
-    ).union(
-        ChatRoom.objects.filter(second_owner_id=user)
-        .annotate(
-            last_message=Subquery(last_message),
-            second_owner_username=Coalesce(
-                Concat("second_owner__username", Value("")), ""
-            ),
-            first_owner_username=Coalesce(
-                Concat("first_owner__username", Value("")), ""
-            ),
-        )
-        .filter(last_message__isnull=False)
-        .values(
-            "first_owner_username",
-            "second_owner_username",
-            "first_owner",
-            "id",
-            "last_message",
-            "second_owner",
-        )
+        .order_by("-latest_message_sent")
+    ).values(
+        "first_owner__username",
+        "first_owner_id",
+        "second_owner__username",
+        "second_owner_id",
+        "id",
+        "latest_message",
+        "latest_message_sent",
+        "time_since",
     )
 
     return queryset
-
-    # queryset = (
-    #     queryset.annotate(
-    #         first_username=Concat("usermessage__first_owner", Value("")),
-    #         second_username=Concat("usermessage__second_owner", Value("")),
-    #         time_since=ExpressionWrapper(
-    #             datetime.now() - F("sent"), output_field=DurationField()
-    #         ),
-    #     )
-    #     .values(
-    #         "time_since",
-    #         "message",
-    #         "sent",
-    #         "from_username",
-    #         "to_username",
-    #     )
-    #     .distinct()
-    # )
 
 
 def get_messages_from_chat(request_user, second_user):

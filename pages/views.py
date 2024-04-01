@@ -168,8 +168,7 @@ def add_interaction(request, pk):
 
 
 def messages_page(request):
-    messages_headers = get_messages_headers(request.user)
-    print(messages_headers[0])
+    messages_headers = get_messages_headers(request.user.id)
     context = {"headers": messages_headers}
     return render(request, "pages/messagePage.html", context)
 
