@@ -128,7 +128,8 @@ def post_delete(request, pk):
             "Chcesz usunąć post, którego nie jesteś w posiadaniu.",
         )
         return redirect("home")
-    post.delete()
+    post.deleted = True
+    post.save()
     return redirect("home")
 
 

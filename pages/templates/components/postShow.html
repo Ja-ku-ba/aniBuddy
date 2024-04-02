@@ -27,7 +27,7 @@
             </p>
         </a>
     </div>
-    {% if "/post/" in request.path %}
+    {% if "/post/" in request.path and request.user.is_authenticated %}
         {% include "components/interaction.html" %}
     {% endif %}
 </div>
