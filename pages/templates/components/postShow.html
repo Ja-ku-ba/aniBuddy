@@ -20,7 +20,7 @@
         <a href="{% url 'post_page' post.id %}"
            class="link-dark link-underline link-underline-opacity-0">
         <span>
-            {{ post.added|naturaltime }}:{{ post.description|truncatechars:50 }}
+            {{ post.added|naturaltime }}: {{ post.description|truncatechars:50 }}
         </span>
             <p class="card-text border-top border-dark">
                 {{ post.content|truncatechars:100 }}
