@@ -73,7 +73,7 @@ def post_add(request):
 
 def post_page(request, pk):
     form = ComentForm()
-
+    edit_form = PostForm()
     if request.method == "POST":
         form = ComentForm(request.POST)
         if form.is_valid():
@@ -100,16 +100,26 @@ def post_page(request, pk):
 
     try:
         post = get_post(Post, id=pk)
+        print(dir(post.values), post.values)
         coments = Coment.objects.filter(post_id=pk)
         images = PostImage.objects.filter(post_id=pk)
-
-        context = {
-            "post": post[0],
-            "form": form,
-            "coments": coments,
-            "reaction_status": reaction,
-            "images": images,
-        }
+        if 0 == request.user.id:
+            context = {
+                "post": post[0],
+                "edit_form": edit_form,
+                "form": form,
+                "coments": coments,
+                "reaction_status": reaction,
+                "images": images,
+            }
+        else:
+            context = {
+                "post": post[0],
+                "form": form,
+                "coments": coments,
+                "reaction_status": reaction,
+                "images": images,
+            }
     except:
         messages.add_message(
             request, messages.ERROR, "Chcesz wyświetlić zawartość, która nie istnieje."
@@ -128,7 +138,8 @@ def post_delete(request, pk):
             "Chcesz usunąć post, którego nie jesteś w posiadaniu.",
         )
         return redirect("home")
-    post.delete()
+    post.deleted = True
+    post.save()
     return redirect("home")
 
 

@@ -1,4 +1,22 @@
 {% load static %}
+{% if request.user.id == post.owner_id %}
+    {% include 'components/postModals.html' %}
+<div class="btn-group mx-auto mb-2">
+
+    <!-- Button trigger edit modal -->
+    <button type="buuton" name="reaction" class="btn btn-outline-secondary" value="1" title="Edytuj post" data-bs-toggle="modal" data-bs-target="#editModal">
+        <img src="{% static "icons/edit.svg" %}" alt="edit">
+    </button>
+
+
+    <span class="btn btn-outline-secondary" title="Ocena społeczności">{{ post.reactions }}</span>
+
+    <!-- Button trigger edit modal -->
+    <button type="button" name="reaction" class="btn btn-outline-secondary" value="-1" title="Usuń post" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        <img src="{% static "icons/delete.svg" %}" alt="delete">
+    </button>
+</div>
+{% else %}
 <form method="POST" action="{% url 'interaction' post.id %}" class="btn-group mx-auto mb-2">
     <button type="submit" name="reaction" class="btn btn-outline-secondary" value="1">
         {% if reaction_status == 0 or reaction_status == -1 %}
@@ -20,4 +38,4 @@
         {% endif %}
     </button>
 </form>
-
+{% endif %}
