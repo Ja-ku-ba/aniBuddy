@@ -1,19 +1,11 @@
 {% load humanize %}
-
 <div class="card post-image my-2">
-    {% if post.image_first %}
-        <img
-                src="{{ MEDIA_URL }}/media/{{ post.image_first }}"
-                id="local-image"
-                class="fit-image"
-                alt="@{{ post.username }}{{ post.added }}"
-        />
-    {% endif %}
+    {% include "components/postImageShow.html" %}
     <div class="card-body">
         <a
-                href="{% url 'user' post.owner_id %}"
-                class="link-dark link-underline link-underline-opacity-0"
-                alt="{{ post.owner_username }}"
+            href="{% url 'user' post.owner_id %}"
+            class="link-dark link-underline link-underline-opacity-0"
+            alt="{{ post.owner_username }}"
         >
             @{{ post.username }},
         </a>
