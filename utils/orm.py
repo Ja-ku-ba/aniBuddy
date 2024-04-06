@@ -54,7 +54,6 @@ def get_post(querryset, **conditions):
             "id",
             "image_first",
             "owner_id",
-            "postimage",
             "reactions",
             "username",
         )
@@ -113,11 +112,23 @@ def get_messages_headers(pk):
 
 
 def get_messages_from_chat(request_user, second_user):
-    queryset = (
-        ChatRoom.objects.filter(first_owner_id=request_user, second_owner=second_user)
+    queryset_rooms = (
+        ChatRoom.objects.filter(
+            first_owner_id=request_user, second_owner_id=second_user
+        )
         | ChatRoom.objects.filter(first_owner_id=second_user, second_owner=request_user)
     ).first()
 
-    queryset_res = queryset.usermessage_set.all()
+    # if one user deleted chat, then dont show old messages
+    if f"{queryset_rooms.first_owner_id}" == request_user:
+        queryset_messages = queryset_rooms.usermessage_set.filter(
+            sent__gte=queryset_rooms.first_owner_deleted_time
+        )
+    elif f"{queryset_rooms.second_owner_id}" == request_user:
+        queryset_messages = queryset_rooms.usermessage_set.filter(
+            sent__gte=queryset_rooms.second_owner_deleted_time
+        )
+    else:
+        queryset_messages = queryset_rooms.usermessage_set.all()
 
-    return queryset_res
+    return queryset_messages

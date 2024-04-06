@@ -5,6 +5,10 @@
     right: 10px;
 }
 
+.messages-page-card {
+    text-decoration: none;
+    color: rgb(33, 37, 41);
+}
 /* end global */
 
 /* posts, home */
@@ -55,6 +59,19 @@
     box-shadow: none;
 }
 
+.delete-chat-button {
+    position: absolute;
+    right: 3px;
+    top: 1px;
+    /*padding: 0 !important;*/
+    /*margin: 0 !important;*/
+    width: fit-content;
+}
+
+.delete-chat-icon {
+    stroke: #ffffff; /* Background color against your svg */
+      stroke-width: 20px;
+}
 /* end chat page */
 
 /* scrolbar */

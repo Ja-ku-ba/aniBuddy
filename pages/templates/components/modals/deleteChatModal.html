@@ -1,0 +1,23 @@
+<!-- Delete chat Modal -->
+<div class="modal fade" id="deleteChatModal" tabindex="-1" aria-labelledby="deleteChatModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteChatModalLabel">Usuń chat</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Jak usuniesz chat, nie bedziesz w stanie go odzyskać.</p>
+          <form class="d-flex flex-column" method="POST" action="{% url 'delete_chat' room.id %}">
+              {% csrf_token %}
+              <label for="deleteConfirm" class="mb-2">Czy na pewno chcesz usunąć chat?</label>
+
+              <div class="d-flex justify-content-center">
+                  <button type="button" class="btn btn-primary me-1 w-25 p-2" data-bs-dismiss="modal" aria-label="Close">Nie</button>
+                  <button id="deleteConfirm" class="btn btn-secondary ms-1 w-25 p-2" type="submit" data-bs-dismiss="modal">Tak, usuń</button>
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>

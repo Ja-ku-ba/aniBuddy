@@ -1,11 +1,10 @@
-{% if message.time_since.days > 365 %}
+{% if chat.time_since.days > 365 %}
     {# different year#}
-    <span>{{ message.latest_message_sent|date:"d F Y" }}</span>
-{% elif message.time_since.days >= 1 and message.time_since.days <= 365 %}
+    <span>{{ chat.latest_message_sent|date:"d F Y" }}</span>
+{% elif chat.time_since.days >= 1 and chat.time_since.days <= 365 %}
     {# same year but different day #}
-    <span>{{ message.latest_message_sent|date:"d F" }}</span>
+    <span>{{ chat.latest_message_sent|date:"d F" }}</span>
 {% else %}
     {# the same day#}
-    {{ message.time_since.days }}
-    <span>{{ message.latest_message_sent|time:"H:i" }}</span>
+    <span>{{ chat.latest_message_sent|time:"H:i" }}</span>
 {% endif %}

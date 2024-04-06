@@ -24,7 +24,7 @@
 
         <div class="card">
             <form method="POST"
-{#                  action="{% url 'send_message' request.user.id second_user_id %}"#}
+                  action="{% url 'send_message' request.user.id second_user_id %}"
                   class="form-group d-flex w-100 justify-content-between">
                 {% csrf_token %}
                 <textarea name="message"

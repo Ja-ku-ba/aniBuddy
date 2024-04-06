@@ -92,10 +92,10 @@ class ChatRoom(models.Model):
         "user.MyUserModel", related_name="second_owner", on_delete=models.CASCADE
     )
     first_owner_deleted_time = models.DateTimeField(
-        auto_now=True, null=True, blank=True
+        auto_now_add=True, null=True, blank=True
     )
     second_owner_deleted_time = models.DateTimeField(
-        auto_now=True, null=True, blank=True
+        auto_now_add=True, null=True, blank=True
     )
 
 

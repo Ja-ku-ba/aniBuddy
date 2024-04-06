@@ -1,0 +1,66 @@
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editModalLabel">Edytuj post</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <form class="card p-2"
+          method="POST"
+          action=""
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-3">
+                {% if field.label|slice:'-4:' == "text" %}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label|slice:':-5' }}</label>
+                    <textarea class="form-control"
+                              id="{{ field.id_for_label }}"
+                              name="{{ field.name }}"></textarea>
+                {% elif field.label|slice:'-4:' == "char" %}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label|slice:':-5' }}</label>
+                    <input type="text"
+                           class="form-control"
+                           id="{{ field.id_for_label }}"
+                           name="{{ field.name }}"/>
+                {% endif %}
+            </div>
+            <br/>
+        {% endfor %}
+        <div class="d-grid gap-2 d-md-block ms-auto">
+            <a href="{% url 'home' %}" type="button" class="btn btn-danger">Wróć</a>
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteModalLabel">Usuń post</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Jak usuniesz post, nie bedziesz w stanie go odzyskać.</p>
+          <form class="d-flex flex-column" method="POST" action="{% url 'post_delete' post.id %}">
+              {% csrf_token %}
+              <label for="deleteConfirm" class="mb-2">Czy na pewno chcesz usunąć post?</label>
+
+              <div class="d-flex justify-content-center">
+                  <button type="button" class="btn btn-primary me-1 w-25 p-2" data-bs-dismiss="modal" aria-label="Close">Nie</button>
+                  <button id="deleteConfirm" class="btn btn-secondary ms-1 w-25 p-2" type="submit" data-bs-dismiss="deleteModal">Tak, usuń</button>
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -188,8 +188,10 @@ def send_message_page(request, pk1, pk2):
     # to don't write many times over conditions in template
     if f"{request.user.id}" == pk1:
         second_user_id = pk2
+        chat_messages = get_messages_from_chat(pk1, second_user_id)
     else:
         second_user_id = pk1
+        chat_messages = get_messages_from_chat(pk2, second_user_id)
 
     # check if there is chatroom
     try:
@@ -210,8 +212,6 @@ def send_message_page(request, pk1, pk2):
         )
         return redirect("messages")
 
-    chat_messages = get_messages_from_chat(pk1, pk2)
-
     form = MessageForm()
     if request.method == "POST":
         form = MessageForm(request.POST)
@@ -229,3 +229,37 @@ def send_message_page(request, pk1, pk2):
         "second_user_id": second_user_id,
     }
     return render(request, "pages/chat.html", context)
+
+
+def delete_chat(request, pk):
+    try:
+        chatroom = ChatRoom.objects.get(id=pk)
+    except:
+        messages.add_message(
+            request, messages.ERROR, "Chcesz usunąć chat, który nie istnieje"
+        )
+        return redirect("messages")
+
+    if chatroom.first_owner == request.user:
+        print(1, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
+        chatroom.first_owner_deleted_time = datetime.now()
+        print(1, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
+    elif chatroom.second_owner == request.user:
+        print(2, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
+        chatroom.second_owner_deleted_time = datetime.now()
+        print(2, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
+
+    else:
+        # such a message makes less data about the program available
+        # to the user, i.e. the user does not know that there is such a chat
+        # but with other owners
+        messages.add_message(
+            request, messages.ERROR, "Chcesz usunąć chat, który nie istnieje"
+        )
+        return redirect("messages")
+
+    chatroom.save()
+    posts = get_post(Post)
+
+    context = {"posts": posts}
+    return redirect("messages")

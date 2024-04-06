@@ -1,10 +1,10 @@
 {% load static %}
 {% if request.user.id == post.owner_id %}
-    {% include 'components/postModals.html' %}
-<div class="btn-group mx-auto mb-2">
+{% include 'components/modals/postModals.html' %}
+<div class="btn-group w-50 mx-auto my-2 d-flex" role="group">
 
     <!-- Button trigger edit modal -->
-    <button type="buuton" name="reaction" class="btn btn-outline-secondary" value="1" title="Edytuj post" data-bs-toggle="modal" data-bs-target="#editModal">
+    <button type="button" name="reaction" class="btn btn-outline-secondary" value="1" title="Edytuj post" data-bs-toggle="modal" data-bs-target="#editModal">
         <img src="{% static "icons/edit.svg" %}" alt="edit">
     </button>
 
@@ -17,7 +17,7 @@
     </button>
 </div>
 {% else %}
-<form method="POST" action="{% url 'interaction' post.id %}" class="btn-group mx-auto mb-2">
+<form method="POST" action="{% url 'interaction' post.id %}" class="btn-group mx-auto my-2 d-flex w-50">
     <button type="submit" name="reaction" class="btn btn-outline-secondary" value="1">
         {% if reaction_status == 0 or reaction_status == -1 %}
             <img src="{% static "icons/like.svg" %}" alt="like">

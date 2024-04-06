@@ -9,5 +9,10 @@ urlpatterns = [
     path("post/delete/<int:pk>", views.post_delete, name="post_delete"),
     path("post/reaction/<int:pk>", views.add_interaction, name="interaction"),
     path("messages/", views.messages_page, name="messages"),
-    path("messages/<str:pk1>/<str:pk2>", views.send_message_page, name="send_message"),
+    path(
+        "messages/<str:pk1>/with/<str:pk2>",
+        views.send_message_page,
+        name="send_message",
+    ),
+    path("messages/delete/<str:pk>", views.delete_chat, name="delete_chat"),
 ]

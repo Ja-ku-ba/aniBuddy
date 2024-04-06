@@ -1,18 +1,21 @@
 {% extends "index.html" %}
+{% load static %}
 
 {% block content %}
-    {% for message in headers %}
-        <a href="{% url "send_message" message.first_owner_id message.second_owner_id %}" class="w-100 card mb-2 p-2" style="width: 18rem;">
-            <div class="d.flex">
-                {% if message.first_owner_id != request.user.id %}
-                    <span>@{{ message.first_owner__username }},</span>
-                {% else %}
-                    <span>@{{ message.second_owner__username }},</span>
-                {% endif %}
+    {% for chat in headers %}
+        <div class="w-100 card mb-2 p-2">
+            <a href="{% url "send_message" chat.first_owner_id chat.second_owner_id %}" class="messages-page-card">
+                <div class="d-flex">
+                    {% if chat.first_owner_id != request.user.id %}
+                        <span>@{{ chat.first_owner__username|truncatechars:13 }}, &nbsp</span>
+                    {% else %}
+                        <span>@{{ chat.second_owner__username|truncatechars:13 }}, </span>
+                    {% endif %}
 
-                {% include 'components/messageSentTimeComponent.html' %}
-            </div>
-            <span>{{ message.latest_message|truncatechars:255 }}</span>
-        </a>
+                    {% include 'components/messageSentTimeComponent.html' %}
+                </div>
+                <span class="mx-3 text-break">{{ chat.latest_message|truncatechars:128 }}</span>
+            </a>
+        </div>
     {% endfor %}
 {% endblock %}
