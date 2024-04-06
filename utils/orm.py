@@ -12,6 +12,9 @@ from django.db.models import (
     DurationField,
     ExpressionWrapper,
     DateTimeField,
+    Case,
+    When,
+    BooleanField,
 )
 from django.db.models.functions import Concat
 
@@ -95,9 +98,25 @@ def get_messages_headers(pk):
                 output_field=DurationField(),
             ),
             latest_message=Subquery(latest_message_subquery),
+            should_return=Case(
+                When(
+                    Q(first_owner_id=pk)
+                    & Q(latest_message_sent__lte=F("first_owner_deleted_time")),
+                    then=False,
+                ),
+                When(
+                    Q(second_owner_id=pk)
+                    & Q(latest_message_sent__lte=F("second_owner_deleted_time")),
+                    then=False,
+                ),
+                default=True,
+                output_field=BooleanField(),
+            ),
         )
+        .filter(should_return=True)
         .order_by("-latest_message_sent")
     ).values(
+        "should_return",
         "first_owner__username",
         "first_owner_id",
         "second_owner__username",
@@ -107,7 +126,7 @@ def get_messages_headers(pk):
         "latest_message_sent",
         "time_since",
     )
-
+    print(queryset)
     return queryset
 
 
