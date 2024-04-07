@@ -9,6 +9,17 @@
     text-decoration: none;
     color: rgb(33, 37, 41);
 }
+main {
+    width: 500px !important;
+    margin: auto !important;
+  }
+
+@media only screen and (max-width: 576px) {
+  main {
+    width: fit-content !important;
+    margin: auto !important;
+  }
+}
 /* end global */
 
 /* posts, home */
