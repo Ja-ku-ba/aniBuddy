@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from pages.models import Post
@@ -41,11 +42,13 @@ def login_user(request):
     return render(request, "user/pages/loginRegister.html", context)
 
 
+@login_required()
 def logout_user(request):
     logout(request)
     return redirect("/")
 
 
+@login_required()
 def profile_page(request, pk):
     posts = get_post(Post, owner_id=pk)
     user = get_user_info(MyUserModel, pk)

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from filetype import guess
 
@@ -10,6 +11,7 @@ from .models import Coment, Post, PostImage, Reaction, UserMessage, ChatRoom
 
 
 # Create your views here.
+@login_required()
 def home(request):
     posts = get_post(Post)
 
@@ -17,6 +19,7 @@ def home(request):
     return render(request, "pages/home.html", context)
 
 
+@login_required()
 def post_add(request):
     form = PostForm()
     form_images = PostImageForm()
@@ -78,6 +81,7 @@ def post_add(request):
     return render(request, "pages/addPost.html", context)
 
 
+@login_required()
 def post_page(request, pk):
     form = ComentForm()
     edit_form = PostForm()
@@ -135,6 +139,7 @@ def post_page(request, pk):
     return render(request, "pages/postView.html", context)
 
 
+@login_required()
 def post_delete(request, pk):
     try:
         post = Post.objects.get(id=pk, owner=request.user)
@@ -149,6 +154,7 @@ def post_delete(request, pk):
     return redirect("home")
 
 
+@login_required()
 def add_interaction(request, pk):
     if request.method == "POST":
         try:
@@ -184,12 +190,14 @@ def add_interaction(request, pk):
     return redirect("post_page", pk)
 
 
+@login_required()
 def messages_page(request):
     messages_headers = get_messages_headers(request.user.id)
     context = {"headers": messages_headers}
     return render(request, "pages/messagePage.html", context)
 
 
+@login_required()
 def send_message_page(request, pk1, pk2):
     # to don't write many times over conditions in template
     if f"{request.user.id}" == pk1:
@@ -237,6 +245,7 @@ def send_message_page(request, pk1, pk2):
     return render(request, "pages/chat.html", context)
 
 
+@login_required()
 def delete_chat(request, pk):
     try:
         chatroom = ChatRoom.objects.get(id=pk)
