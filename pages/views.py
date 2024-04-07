@@ -19,22 +19,26 @@ def home(request):
 
 def post_add(request):
     form = PostForm()
-    formImages = PostImageForm()
-
+    form_images = PostImageForm()
     if request.method == "POST":
         form = PostForm(request.POST)
-        formImages = PostImageForm(request.POST, request.FILES)
+        form_images = PostImageForm(request.POST, request.FILES)
 
         # chcek if user want to add an empty post
-        if form.is_valid() and formImages.is_valid():
-            if not any([form.clean(), formImages.clean()]):
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    "Co najmniej jedno pole musi zawierać wartość",
-                )
-                return redirect("poast_add")
+        if form.is_valid() and not form_images.is_valid():
+            messages.add_message(
+                request, messages.ERROR, "Przesłany plik nie jest zdjęciem."
+            )
+            return redirect("poast_add")
+        elif not any([form.clean(), form_images.clean()]):
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Co najmniej jedno pole musi zawierać wartość",
+            )
+            return redirect("poast_add")
 
+        if form.is_valid() and form_images.is_valid():
             # chcek if files are images/gifs, not other types
             # before any crud on db (eg. Post)
             images = request.FILES.getlist("image")
@@ -47,7 +51,9 @@ def post_add(request):
                         raise KeyError
                 except:
                     messages.add_message(
-                        request, messages.ERROR, "Przesłany plik nie jest zdjęciem."
+                        request,
+                        messages.ERROR,
+                        "Pośród przesłanych plików, znajduje się taki, który nie jest zdjęciem.",
                     )
                     return redirect("poast_add")
 
@@ -60,6 +66,7 @@ def post_add(request):
             )
 
             # saves images related to post
+            images = request.FILES.getlist("image")
             for request_image in images:
                 new_image = PostImage.objects.create(post=new_post)
                 new_image.save()
@@ -67,7 +74,7 @@ def post_add(request):
                 new_image.save()
 
             return redirect("home")
-    context = {"form": form, "formImages": formImages}
+    context = {"form": form, "form_images": form_images}
     return render(request, "pages/addPost.html", context)
 
 
@@ -100,7 +107,6 @@ def post_page(request, pk):
 
     try:
         post = get_post(Post, id=pk)
-        print(dir(post.values), post.values)
         coments = Coment.objects.filter(post_id=pk)
         images = PostImage.objects.filter(post_id=pk)
         if 0 == request.user.id:
@@ -241,13 +247,9 @@ def delete_chat(request, pk):
         return redirect("messages")
 
     if chatroom.first_owner == request.user:
-        print(1, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
         chatroom.first_owner_deleted_time = datetime.now()
-        print(1, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
     elif chatroom.second_owner == request.user:
-        print(2, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
         chatroom.second_owner_deleted_time = datetime.now()
-        print(2, chatroom.first_owner_deleted_time, chatroom.second_owner_deleted_time)
 
     else:
         # such a message makes less data about the program available
